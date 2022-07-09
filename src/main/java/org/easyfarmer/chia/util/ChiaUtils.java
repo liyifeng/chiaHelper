@@ -127,9 +127,7 @@ public class ChiaUtils {
     }
 
     public static JSONObject get_wallet_balance(Integer walletId) {
-        JSONObject param = new JSONObject();
-        param.put("wallet_id", walletId);
-        String resp = execChiaRpcCmd("chia rpc wallet get_wallet_balance " + param.toJSONString());
+        String resp = execChiaRpcCmd("chia rpc wallet get_wallet_balance {\\\"wallet_id\\\":"+walletId+"}");
         if (resp != null) {
             return JSON.parseObject(resp);
         }

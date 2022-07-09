@@ -34,6 +34,7 @@ public class CheckWallet2Transfer implements Runnable {
     public void run() {
         while (true) {
             try {
+//                APP.app.addLog("check...");
                 if (!monitor || targetWalletAddress == null || targetWalletAddress.trim().length() != 62) {
                     continue;
                 }
@@ -59,7 +60,7 @@ public class CheckWallet2Transfer implements Runnable {
                 logger.error("报错", e);
             } finally {
                 try {
-                    Thread.sleep(30000L);
+                    Thread.sleep(10000L);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

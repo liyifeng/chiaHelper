@@ -28,6 +28,7 @@ import java.io.File;
 public class APP extends JFrame {
     private static final Logger logger = LoggerFactory.getLogger(APP.class);
 
+    public static APP app;
     public APP() {
         try {
             FlatLightLaf.setup();
@@ -35,12 +36,13 @@ public class APP extends JFrame {
             logger.error("设置主题失败", ex);
         }
         initComponents();
-        setTitle("奇亚钱包自动转账工具-www.Easyfarmer.org出品");
+        setTitle("奇亚钱包自动转账工具 - www.Easyfarmer.org出品");
         setDefaultFee();
+//        chiaWalletAddressTextField.setText("xch1z6nu6nf8dqrjcn6smnmgczqljghgendazve9953dw2qynmruk54qals56z");
     }
 
     public static void main(String[] args) {
-        APP app = new APP();
+        app = new APP();
         app.loadFingerprint();
 
         Thread thread = new Thread(new CheckWallet2Transfer());
@@ -130,7 +132,7 @@ public class APP extends JFrame {
         feeTextField.setText("" + Constant.DEFAULT_TRANSFER_FEE);
     }
 
-    private void addLog(String log) {
+    public void addLog(String log) {
         logTextArea.append(DateUtil.now() + " " + log + "\n");
     }
 
