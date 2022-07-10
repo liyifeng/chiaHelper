@@ -69,15 +69,34 @@ public class NftWallet extends ChiaForkResult {
             if (StrUtil.isNotBlank(walletIdStr) && NumberUtil.isNumber(walletIdStr)) {
                 this.walletId = Integer.parseInt(walletIdStr);
             }
-        }else if(line.contains("Claimable balance")){
+        } else if (line.contains("Claimable balance")) {
             String xchNumStr = StrUtil.subBetween(line, "Claimable balance: ", "xch");
-            if (StrUtil.isNotBlank(xchNumStr) && NumberUtil.isNumber(xchNumStr)) {
-               this.claimableBalanceXch = new BigDecimal(xchNumStr);
+            if (StrUtil.isNotBlank(xchNumStr)) {
+                xchNumStr = xchNumStr.trim();
+                if ("0.0".equals(xchNumStr)) {
+                    this.claimableBalanceXch = new BigDecimal("0");
+                } else {
+                    try {
+                        this.claimableBalanceXch = new BigDecimal(xchNumStr);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
 
             String mojoNumStr = StrUtil.subBetween(line, "(", "mojo)");
-            if (StrUtil.isNotBlank(mojoNumStr) && NumberUtil.isNumber(mojoNumStr)) {
-                this.claimableBalanceMojo = Long.parseLong(mojoNumStr);
+            if (StrUtil.isNotBlank(mojoNumStr)) {
+                mojoNumStr = mojoNumStr.trim();
+                if ("0".equals(mojoNumStr)) {
+                    this.claimableBalanceMojo = 0L;
+                } else {
+                    try {
+                        this.claimableBalanceMojo = Long.parseLong(mojoNumStr);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }

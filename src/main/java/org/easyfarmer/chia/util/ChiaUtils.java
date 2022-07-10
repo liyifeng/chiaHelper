@@ -189,9 +189,9 @@ public class ChiaUtils {
     // chia plotnft show -f ${fingerprint} 列出所有可认领待列表
     public static List<NftWallet> plotNftShow(String fingerprint) {
         String cmd = "chia plotnft show -f " + fingerprint;
+        List<NftWallet> resultList = new ArrayList<>();
         try {
             List<String> execResultLineList = CommandUtils.exec(cmd, null, getChiaCmdPathFile());
-            List<NftWallet> resultList = new ArrayList<>();
             NftWallet obj = null;
             List<String> oneWalletLineList = new ArrayList<>();
 
@@ -217,11 +217,10 @@ public class ChiaUtils {
                 oneWalletLineList.add(line);
             }
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return resultList;
     }
 
     //chia plotnft claim -f ${fingerprint} -i ${walletId}  通过该命令认领奖励
