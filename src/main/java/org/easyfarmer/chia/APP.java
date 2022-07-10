@@ -14,8 +14,6 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 import net.miginfocom.swing.MigLayout;
 import org.easyfarmer.chia.util.ChiaUtils;
 import org.easyfarmer.chia.util.Constant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,14 +24,14 @@ import java.io.File;
  * @author li yifeng
  */
 public class APP extends JFrame {
-    private static final Logger logger = LoggerFactory.getLogger(APP.class);
+    //private static final Logger logger = LoggerFactory.getLogger(APP.class);
 
     public static APP app;
     public APP() {
         try {
             FlatLightLaf.setup();
         } catch (Exception ex) {
-            logger.error("设置主题失败", ex);
+            //logger.error("设置主题失败", ex);
         }
         initComponents();
         setTitle("奇亚钱包自动转账工具 - www.Easyfarmer.org出品");
@@ -55,7 +53,7 @@ public class APP extends JFrame {
 
     private void loadFingerprint() {
         String respJsonStr = ChiaUtils.get_logged_in_fingerprint();
-        String fingerprint = "未读取到";
+        String fingerprint = "客户端未运行";
         if (respJsonStr != null) {
             JSONObject json = JSON.parseObject(respJsonStr);
             if (json != null && json.containsKey("success") && json.getBoolean("success") && json.containsKey("fingerprint")) {
@@ -65,11 +63,11 @@ public class APP extends JFrame {
         fingerprintValue.setText(fingerprint);
     }
 
-    String startBtntext = "开启自动转账";
-    String stopBtntext = "停止自动转账";
+    String startBtnText = "开启自动转账";
+    String stopBtnText = "停止自动转账";
 
     private void button1(ActionEvent e) {
-        if (button1.getText().equals(startBtntext)) { //开启功能
+        if (button1.getText().equals(startBtnText)) { //开启功能
             File path = null;
             try {
                 path = ChiaUtils.getChiaCmdPathFile();
@@ -105,17 +103,17 @@ public class APP extends JFrame {
 
             setFormEnable(false);
             CheckWallet2Transfer.startMonitor(targetAddress, fee);
-            button1.setText(stopBtntext);
+            button1.setText(stopBtnText);
             statusValueLabel.setText("运行中");
             addLog("开始监控钱包余额。");
             statusValueLabel.setForeground(Color.GREEN);
-        } else if (button1.getText().equals(stopBtntext)) { //关闭功能
+        } else if (button1.getText().equals(stopBtnText)) { //关闭功能
             setFormEnable(true);
             CheckWallet2Transfer.stopMonitor();
             statusValueLabel.setText("已停止");
             statusValueLabel.setForeground(Color.RED);
             addLog("停止监控。");
-            button1.setText(startBtntext);
+            button1.setText(startBtnText);
         }
     }
 

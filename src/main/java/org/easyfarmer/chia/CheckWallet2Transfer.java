@@ -3,8 +3,6 @@ package org.easyfarmer.chia;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.easyfarmer.chia.util.ChiaUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author liyifeng
@@ -12,8 +10,6 @@ import org.slf4j.LoggerFactory;
  * @date 2022/7/9 10:32 下午
  */
 public class CheckWallet2Transfer implements Runnable {
-
-    private static final Logger logger = LoggerFactory.getLogger(CheckWallet2Transfer.class);
 
     private static boolean monitor = false;
     private static String targetWalletAddress;
@@ -42,7 +38,7 @@ public class CheckWallet2Transfer implements Runnable {
                 JSONObject json = ChiaUtils.get_wallets();
                 Integer walletId = getChiaWalletId(json);
                 if (walletId == null) {
-                    logger.warn("获取钱包账户ID失败:{}", json);
+                    //logger.warn("获取钱包账户ID失败:{}", json);
                     continue;
                 }
 
@@ -57,7 +53,7 @@ public class CheckWallet2Transfer implements Runnable {
 
                 }
             } catch (Exception e) {
-                logger.error("报错", e);
+                //logger.error("报错", e);
             } finally {
                 try {
                     Thread.sleep(10000L);

@@ -3,8 +3,6 @@ package org.easyfarmer.chia.cmd;
 
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -17,7 +15,7 @@ import java.util.Map;
  * @date 2021/6/23 7:07 下午
  */
 public class ContentBuilder {
-    private static final Logger log = LoggerFactory.getLogger(ContentBuilder.class);
+    //private static final Logger log = LoggerFactory.getLogger(ContentBuilder.class);
 
     private static boolean isInt(Field f) {
         return f.getType().getTypeName().contains("int") || f.getType().getTypeName().contains("java.lang.Integer");
