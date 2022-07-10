@@ -1,5 +1,6 @@
 package org.easyfarmer.chia;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.easyfarmer.chia.cmd.NftWallet;
@@ -22,21 +23,22 @@ public class CheckWallet2Transfer implements Runnable {
     private static boolean monitor = false;
     private static String targetWalletAddress;
     private static Long transferFee; //转账手续费
+    private static String fingerprint;
 
     public static void stopMonitor() {
         targetWalletAddress = null;
         monitor = false;
     }
 
-    public static void startMonitor(String walletAddress, Long fee) {
-        monitor = true;
-        targetWalletAddress = walletAddress;
+    public static void startMonitor(String walletAddress, String fingerprint, Long fee) {
+        CheckWallet2Transfer.monitor = true;
+        CheckWallet2Transfer.targetWalletAddress = walletAddress;
         if (fee == null) {
-            transferFee = Constant.DEFAULT_TRANSFER_FEE;
+            CheckWallet2Transfer.transferFee = Constant.DEFAULT_TRANSFER_FEE;
         } else {
-            transferFee = fee;
-
+            CheckWallet2Transfer.transferFee = fee;
         }
+        CheckWallet2Transfer.fingerprint = fingerprint;
     }
 
     @Override
@@ -55,11 +57,16 @@ public class CheckWallet2Transfer implements Runnable {
 
                 JSONObject walletBalanceJson = ChiaUtils.get_wallet_balance(walletId);
                 JSONObject balanceDataJson = null;
-                String fingerprint = null;
 
                 if (chiaRpcSuccess(walletBalanceJson) && walletBalanceJson.containsKey("wallet_balance")) {
                     balanceDataJson = walletBalanceJson.getJSONObject("wallet_balance");
-                    fingerprint = balanceDataJson.getString("fingerprint");
+                    String currentFingerprintTmp = balanceDataJson.getString("fingerprint");
+                    // 用户登录的指纹变动后监控停止
+                    if (!StrUtil.equals(fingerprint, currentFingerprintTmp)) {
+                        APP.app.addLog("监控的指纹和当前客户端登录的指纹不匹配，监控停转账停止。监控的指纹：" + fingerprint + ",当前客户端的指纹：" + currentFingerprintTmp);
+                        stopMonitor();
+                        continue;
+                    }
                 } else {
                     continue;
                 }

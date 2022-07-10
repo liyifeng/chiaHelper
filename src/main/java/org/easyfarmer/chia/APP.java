@@ -14,12 +14,15 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 import net.miginfocom.swing.MigLayout;
 import org.easyfarmer.chia.util.ChiaUtils;
 import org.easyfarmer.chia.util.Constant;
+import org.easyfarmer.chia.util.SwingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 
 /**
@@ -43,6 +46,14 @@ public class APP extends JFrame {
         setTitle("奇亚钱包自动转账工具 - www.Easyfarmer.org出品");
         setDefaultFee();
 
+        sourceUrlLabel.setForeground(Color.BLUE);
+        sourceUrlLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                SwingUtils.jump2Url("https://github.com/liyifeng/chiaHelper");
+            }
+        });
+        sourceUrlLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         if (Constant.test) {
             chiaWalletAddressTextField.setText("xch1z6nu6nf8dqrjcn6smnmgczqljghgendazve9953dw2qynmruk54qals56z");
         }
@@ -63,9 +74,11 @@ public class APP extends JFrame {
     }
 
 
+    String fingerprintDefaultValue = "读取失败";
+
     private void loadFingerprint() {
         String respJsonStr = ChiaUtils.get_logged_in_fingerprint();
-        String fingerprint = "客户端未运行";
+        String fingerprint = fingerprintDefaultValue;
         if (respJsonStr != null) {
             try {
                 JSONObject json = JSON.parseObject(respJsonStr);
@@ -112,14 +125,28 @@ public class APP extends JFrame {
             String feeText = feeTextField.getText();
             long fee = Constant.DEFAULT_TRANSFER_FEE;
             if (StrUtil.isBlank(feeText) || !NumberUtil.isNumber(feeText)) {
+                try {
+                    int feeValue = Integer.parseInt(feeText);
+                    if (feeValue <= 0) {
+                        JOptionPane.showMessageDialog(this, "转账手续费的单位是mojo，不能填写负数或小数！");
+                        return;
+                    }
+                } catch (Exception ex) {
+                    logger.error("报错", ex);
+                }
                 addLog("转账手续费未设置，自动设置为默认:" + Constant.DEFAULT_TRANSFER_FEE);
                 feeTextField.setText(Constant.DEFAULT_TRANSFER_FEE + "");
             } else {
                 fee = NumberUtil.toBigInteger(feeText).intValue();
             }
+            String fingerprint = fingerprintValue.getText();
+            if (fingerprintDefaultValue.equals(fingerprint) || !NumberUtil.isNumber(fingerprint)) {
+                JOptionPane.showMessageDialog(this, "未读取到指纹信息，请确保奇亚客户端已经启动！");
+                return;
+            }
 
             setFormEnable(false);
-            CheckWallet2Transfer.startMonitor(targetAddress, fee);
+            CheckWallet2Transfer.startMonitor(targetAddress, fingerprint, fee);
             button1.setText(stopBtnText);
             statusValueLabel.setText("运行中");
             addLog("开始监控钱包余额。");
@@ -172,25 +199,26 @@ public class APP extends JFrame {
         logTextArea = new JTextArea();
         label4 = new JLabel();
         label5 = new JLabel();
+        sourceUrlLabel = new JLabel();
 
         //======== this ========
         Container contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                        "[200:400:1500,fill]",
-                // rows
-                "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[100:n:1500,fill]" +
-                        "[]" +
-                        "[]"));
+            "hidemode 3",
+            // columns
+            "[fill]" +
+            "[200:400:1500,fill]",
+            // rows
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[100:n:1500,fill]" +
+            "[]" +
+            "[]"));
 
         //---- label3 ----
         label3.setText("\u76d1\u63a7\u72b6\u6001\uff1a");
@@ -247,8 +275,12 @@ public class APP extends JFrame {
         contentPane.add(label4, "cell 0 8 2 1");
 
         //---- label5 ----
-        label5.setText("\u6e90\u7801\uff1ahttps://github.com/liyifeng/chiaHelper");
-        contentPane.add(label5, "cell 0 9 2 1");
+        label5.setText("\u6e90\u7801\uff1a");
+        contentPane.add(label5, "cell 0 9 2 1,alignx left,growx 0");
+
+        //---- sourceUrlLabel ----
+        sourceUrlLabel.setText("https://github.com/liyifeng/chiaHelper");
+        contentPane.add(sourceUrlLabel, "cell 0 9 2 1");
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -271,5 +303,6 @@ public class APP extends JFrame {
     private JTextArea logTextArea;
     private JLabel label4;
     private JLabel label5;
+    private JLabel sourceUrlLabel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
