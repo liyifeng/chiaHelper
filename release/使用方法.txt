@@ -1,0 +1,5 @@
+软件运行方法：
+1、点击链接下载运行环境后解压到本软件目录
+https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jre/x64/windows/OpenJDK8U-jre_x64_windows_hotspot_8u332b09.zip
+
+2、双击start.bat脚本启动软件
