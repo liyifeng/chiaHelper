@@ -72,7 +72,7 @@ public class APP extends JFrame {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.warn("加载指纹出错", e);
             }
         }
         fingerprintValue.setText(fingerprint);
@@ -174,21 +174,21 @@ public class APP extends JFrame {
         //======== this ========
         Container contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-            "hidemode 3",
-            // columns
-            "[fill]" +
-            "[200:400:1500,fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[100:n:1500,fill]" +
-            "[]" +
-            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                        "[200:400:1500,fill]",
+                // rows
+                "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[100:n:1500,fill]" +
+                        "[]" +
+                        "[]"));
 
         //---- label3 ----
         label3.setText("\u76d1\u63a7\u72b6\u6001\uff1a");

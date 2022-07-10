@@ -1,5 +1,8 @@
 package org.easyfarmer.chia.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
@@ -16,10 +19,10 @@ import java.util.List;
  * @date 2021/6/23 9:43 上午
  */
 public class CommandUtils {
-    //private static final Logger LOGGER = LoggerFactory.getLogger(CommandUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandUtils.class);
 
     public static List<String> exec(String cmd, String[] envp, File cmdPath) throws Exception {
-        //LOGGER.info("执行命令:{}，path:{}", cmd, (cmdPath != null ? cmdPath.getAbsolutePath() : "null"));
+        LOGGER.debug("执行命令:{}，path:{}", cmd, (cmdPath != null ? cmdPath.getAbsolutePath() : "null"));
         StringBuilder result = new StringBuilder();
 
         Process process = null;
@@ -62,7 +65,7 @@ public class CommandUtils {
             }
         }
 
-        //LOGGER.debug("执行命令返回结果:{}", result);
+        LOGGER.debug("执行命令返回结果:{}", result);
         // 返回执行结果
         return list;
     }

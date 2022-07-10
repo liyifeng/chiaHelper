@@ -5,6 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.easyfarmer.chia.cmd.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -19,6 +21,7 @@ import java.util.List;
  * @date 2021/10/21 10:45 上午
  */
 public class ChiaUtils {
+    private static final Logger logger = LoggerFactory.getLogger(ChiaUtils.class);
 
     public static String get_logged_in_fingerprint() {
         return execChiaRpcCmd("chia rpc wallet get_logged_in_fingerprint");
@@ -139,7 +142,7 @@ public class ChiaUtils {
             List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile());
             return list2String(list);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info("执行命令出错:" + cmd, e);
         }
         return null;
     }
