@@ -14,6 +14,8 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 import net.miginfocom.swing.MigLayout;
 import org.easyfarmer.chia.util.ChiaUtils;
 import org.easyfarmer.chia.util.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,11 +26,14 @@ import java.io.File;
  * @author li yifeng
  */
 public class APP extends JFrame {
-    //private static final Logger logger = LoggerFactory.getLogger(APP.class);
+    private static final Logger logger = LoggerFactory.getLogger(APP.class);
 
     public static APP app;
 
     public APP() {
+
+        System.setProperty("log4j2.configurationFile", "log4j2.xml");
+
         try {
             FlatLightLaf.setup();
         } catch (Exception ex) {
@@ -141,6 +146,7 @@ public class APP extends JFrame {
     }
 
     public void addLog(String log) {
+        logger.info(log);
         logTextArea.append(DateUtil.now() + " " + log + "\n");
     }
 
@@ -168,24 +174,24 @@ public class APP extends JFrame {
         //======== this ========
         Container contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                        "[200:400:600,fill]",
-                // rows
-                "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[50:100:500,fill]" +
-                        "[]" +
-                        "[]"));
+            "hidemode 3",
+            // columns
+            "[fill]" +
+            "[200:400:1500,fill]",
+            // rows
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[100:n:1500,fill]" +
+            "[]" +
+            "[]"));
 
         //---- label3 ----
-        label3.setText("\u72b6\u6001\uff1a");
+        label3.setText("\u76d1\u63a7\u72b6\u6001\uff1a");
         contentPane.add(label3, "cell 0 1,alignx right,growx 0");
 
         //---- statusValueLabel ----
@@ -202,23 +208,23 @@ public class APP extends JFrame {
 
         //---- fingerprintValue ----
         fingerprintValue.setText("123123123");
-        contentPane.add(fingerprintValue, "cell 1 2");
+        contentPane.add(fingerprintValue, "cell 1 2,alignx left,growx 0");
 
         //---- targetChiaAddressLabel ----
         targetChiaAddressLabel.setText("\u8f6c\u5230\u76ee\u6807\u94b1\u5305\u5730\u5740\uff1a");
         contentPane.add(targetChiaAddressLabel, "cell 0 3,alignx right,growx 0");
-        contentPane.add(chiaWalletAddressTextField, "cell 1 3");
+        contentPane.add(chiaWalletAddressTextField, "cell 1 3,growx");
 
         //---- feeLabel ----
         feeLabel.setText("\u8f6c\u8d26\u624b\u7eed\u8d39\uff1a");
         contentPane.add(feeLabel, "cell 0 4,alignx right,growx 0");
 
         //---- feeTextField ----
-        feeTextField.setToolTipText("\u5355\u4f4d\u662fmojo\uff0c\u7ed9\u4e9b\u624b\u7eed\u8d39\u53ef\u4ee5\u52a0\u5feb\u786e\u8ba4\u901f\u5ea6\uff0c\u4f8b\u5982\u586b\uff1a100\u3002");
+        feeTextField.setToolTipText("\u5355\u4f4d\u662fmojo\uff0c\u7ed9\u4e9b\u624b\u7eed\u8d39\u53ef\u4ee5\u52a0\u5feb\u786e\u8ba4\u901f\u5ea6\uff0c\u4f8b\u5982\u586b\uff1a1\u8868\u793a0.000000000001xch\u3002");
         contentPane.add(feeTextField, "cell 1 4,grow");
 
         //---- label2 ----
-        label2.setText("mojo");
+        label2.setText("\u5355\u4f4d\uff1amojo");
         label2.setToolTipText("\u6ce8\u610f\u5355\u4f4d\u662fmojo");
         contentPane.add(label2, "cell 1 4");
 
@@ -232,7 +238,7 @@ public class APP extends JFrame {
         {
             scrollPane1.setViewportView(logTextArea);
         }
-        contentPane.add(scrollPane1, "cell 0 7 2 1,growy");
+        contentPane.add(scrollPane1, "cell 0 7 2 1,grow");
 
         //---- label4 ----
         label4.setText("\u672c\u5de5\u5177\u53ea\u9002\u7528Windows\u7cfb\u7edf\uff0c\u5df2\u5f00\u6e90\u3001\u6709\u5e7f\u544a\u3002");

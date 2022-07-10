@@ -1,4 +1,4 @@
 软件运行方法：
 双击start.bat脚本启动软件
 
-*如果已经有Java环境，只下载本工具的jar文件，然后用命令启动即可。
+*如果已经有Java环境，只下载本工具的jar文件，然后用命令java -jar chiaAutoTransfer.jar 启动即可。
