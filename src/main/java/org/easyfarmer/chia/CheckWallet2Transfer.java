@@ -2,8 +2,11 @@ package org.easyfarmer.chia;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.easyfarmer.chia.cmd.NftWallet;
 import org.easyfarmer.chia.util.ChiaUtils;
 import org.easyfarmer.chia.util.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,6 +17,7 @@ import java.util.List;
  * @date 2022/7/9 10:32 下午
  */
 public class CheckWallet2Transfer implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(CheckWallet2Transfer.class);
 
     private static boolean monitor = false;
     private static String targetWalletAddress;
@@ -39,46 +43,33 @@ public class CheckWallet2Transfer implements Runnable {
     public void run() {
         while (true) {
             try {
-//                APP.app.addLog("check...");
                 if (!monitor || targetWalletAddress == null || targetWalletAddress.trim().length() != 62) {
                     continue;
                 }
-
-                JSONObject json = ChiaUtils.get_wallets();
-                Integer walletId = getChiaWalletId(json);
+                JSONObject walletRespJson = ChiaUtils.get_wallets();
+                Integer walletId = getChiaWalletId(walletRespJson);
                 if (walletId == null) {
                     //logger.warn("获取钱包账户ID失败:{}", json);
-                    continue;
+                    return;
                 }
 
                 JSONObject walletBalanceJson = ChiaUtils.get_wallet_balance(walletId);
+                JSONObject balanceDataJson = null;
+                String fingerprint = null;
+
                 if (chiaRpcSuccess(walletBalanceJson) && walletBalanceJson.containsKey("wallet_balance")) {
-                    JSONObject balanceDataJson = walletBalanceJson.getJSONObject("wallet_balance");
-                    Long balance = balanceDataJson.getLong("confirmed_wallet_balance");
-                    String fingerprint = balanceDataJson.getString("fingerprint");
-
-                    if (balance > 0) {//需要转账
-
-                        //钱包账户有余额
-                        String fee = null;
-                        if (transferFee > 0) { //有手续费
-                            fee = ChiaUtils.mojo2xch(new BigDecimal(transferFee));
-                            balance -= transferFee;
-                        }
-                        if(balance <= 0){
-                            continue;
-                        }
-
-                        String amt = ChiaUtils.mojo2xch(new BigDecimal(balance));
-                        APP.app.addLog(String.format("自动转账金额：%s，手续费：%s，目标账户：%s",  amt, fee,targetWalletAddress));
-                        List<String> lines = ChiaUtils.transfer(fingerprint, targetWalletAddress, amt, fee);
-                        APP.app.addLog("转账结果：");
-                        for (String line : lines) {
-                            APP.app.addLog(line);
-                        }
-                    }
-
+                    balanceDataJson = walletBalanceJson.getJSONObject("wallet_balance");
+                    fingerprint = balanceDataJson.getString("fingerprint");
+                } else {
+                    continue;
                 }
+
+                // 检查钱包余额
+                checkWalletBalance(balanceDataJson, fingerprint);
+
+                // 检查待认领奖励
+                checkClaim(fingerprint);
+
             } catch (Exception e) {
                 //logger.error("报错", e);
             } finally {
@@ -89,6 +80,58 @@ public class CheckWallet2Transfer implements Runnable {
                 }
             }
         }
+    }
+
+    // 检查待认领待奖励
+    private void checkClaim(String fingerprint) {
+        try {
+
+            List<NftWallet> nftWalletList = ChiaUtils.plotNftShow(fingerprint);
+
+            if (nftWalletList != null && nftWalletList.size() > 0) {
+                for (NftWallet nftWallet : nftWalletList) {
+                    if (nftWallet.getClaimableBalanceMojo() > 0) {
+                        logger.info("认领奖励,walletId:{},金额:{},launchId:{}", nftWallet.getWalletId(), nftWallet.getClaimableBalanceXch(), nftWallet.getLauncherId());
+                        String claimResp = ChiaUtils.plotNftClaim(fingerprint, nftWallet.getWalletId());
+                        logger.info("认领结果:{}", claimResp);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void checkWalletBalance(JSONObject balanceDataJson, String fingerprint) {
+        try {
+            Long balance = balanceDataJson.getLong("confirmed_wallet_balance");
+
+            if (balance > 0) {//需要转账
+
+                //钱包账户有余额
+                String fee = null;
+                if (transferFee > 0) { //有手续费
+                    fee = ChiaUtils.mojo2xch(new BigDecimal(transferFee));
+                    balance -= transferFee;
+                }
+                if (balance <= 0) {
+                    return;
+                }
+
+                String amt = ChiaUtils.mojo2xch(new BigDecimal(balance));
+                APP.app.addLog(String.format("自动转账金额：%s，手续费：%s，目标账户：%s", amt, fee, targetWalletAddress));
+                List<String> lines = ChiaUtils.transfer(fingerprint, targetWalletAddress, amt, fee);
+                APP.app.addLog("转账结果：");
+                for (String line : lines) {
+                    APP.app.addLog(line);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private Integer getChiaWalletId(JSONObject json) {

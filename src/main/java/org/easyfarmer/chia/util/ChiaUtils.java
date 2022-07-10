@@ -4,10 +4,7 @@ package org.easyfarmer.chia.util;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.easyfarmer.chia.cmd.ChiaForkResult;
-import org.easyfarmer.chia.cmd.ChiaKeys;
-import org.easyfarmer.chia.cmd.ContentBuilder;
-import org.easyfarmer.chia.cmd.KeysShow;
+import org.easyfarmer.chia.cmd.*;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -187,6 +184,51 @@ public class ChiaUtils {
         System.out.println(mojo2xch(new BigDecimal(mojo)));
         String fee = ChiaUtils.mojo2xch(new BigDecimal(3L));
         System.out.println(fee);
+    }
+
+    // chia plotnft show -f ${fingerprint} 列出所有可认领待列表
+    public static List<NftWallet> plotNftShow(String fingerprint) {
+        String cmd = "chia plotnft show -f " + fingerprint;
+        try {
+            List<String> execResultLineList = CommandUtils.exec(cmd, null, getChiaCmdPathFile());
+            List<NftWallet> resultList = new ArrayList<>();
+            NftWallet obj = null;
+            List<String> oneWalletLineList = new ArrayList<>();
+
+            boolean isLastLine = false;
+            int index = 0;
+            int size = execResultLineList.size();
+            for (String line : execResultLineList) {
+                index++;
+                isLastLine = index == size;
+                if (StrUtil.isBlank(line)) {
+                    continue;
+                }
+                if (line.contains("Wallet id") || isLastLine) {
+                    if (obj != null) {
+                        ContentBuilder.setValue(obj, oneWalletLineList);
+                    }
+                    if (!isLastLine) {
+                        obj = new NftWallet(cmd);
+                        resultList.add(obj);
+                        oneWalletLineList.clear();
+                    }
+                }
+                oneWalletLineList.add(line);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //chia plotnft claim -f ${fingerprint} -i ${walletId}  通过该命令认领奖励
+    public static String plotNftClaim(String fingerprint, Integer walletId) {
+        String cmd = String.format("chia plotnft claim -f %s -i %d", fingerprint, walletId);
+        String claimResp = execChiaRpcCmd(cmd);
+        return claimResp;
     }
 
 

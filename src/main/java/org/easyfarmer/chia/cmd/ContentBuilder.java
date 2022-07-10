@@ -45,6 +45,7 @@ public class ContentBuilder {
     public static Map<String, String> listResult2Map(List<String> lines){
         return listResult2Map(lines,":");
     }
+
     public static <T extends ChiaForkResult> T setValue(T obj, List<String> lines) {
         Map<String, String> valueMap = listResult2Map(lines);
         Map<String, String> fieldMap = obj.getFieldMap();
