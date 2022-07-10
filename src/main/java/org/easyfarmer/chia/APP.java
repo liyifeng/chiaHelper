@@ -60,9 +60,14 @@ public class APP extends JFrame {
         String respJsonStr = ChiaUtils.get_logged_in_fingerprint();
         String fingerprint = "客户端未运行";
         if (respJsonStr != null) {
-            JSONObject json = JSON.parseObject(respJsonStr);
-            if (json != null && json.containsKey("success") && json.getBoolean("success") && json.containsKey("fingerprint")) {
-                fingerprint = json.getString("fingerprint");
+            try {
+                JSONObject json = JSON.parseObject(respJsonStr);
+                if (json != null && json.containsKey("success") && json.getBoolean("success") && json.containsKey("fingerprint")) {
+                    fingerprint = json.getString("fingerprint");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         fingerprintValue.setText(fingerprint);
@@ -163,21 +168,21 @@ public class APP extends JFrame {
         //======== this ========
         Container contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-            "hidemode 3",
-            // columns
-            "[fill]" +
-            "[200:400:600,fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[50:100:500,fill]" +
-            "[]" +
-            "[]"));
+                "hidemode 3",
+                // columns
+                "[fill]" +
+                        "[200:400:600,fill]",
+                // rows
+                "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[]" +
+                        "[50:100:500,fill]" +
+                        "[]" +
+                        "[]"));
 
         //---- label3 ----
         label3.setText("\u72b6\u6001\uff1a");

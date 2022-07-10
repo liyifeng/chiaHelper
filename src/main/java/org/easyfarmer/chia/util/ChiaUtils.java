@@ -160,7 +160,8 @@ public class ChiaUtils {
     public static List<String> transfer(String fingerprint, String targetWalletAddress, String balance, String transferFee) {
         try {
             String cmd = String.format("chia wallet send -f %s  -a %s -m %s -t %s", fingerprint, balance, (transferFee == null ? "0" : transferFee), targetWalletAddress);
-            System.out.println(String.format("向%s转账%d，费用：%d", targetWalletAddress, balance, transferFee));
+//            String cmd = String.format("chia wallet send -f %s  -a %s -m %s -t %s", fingerprint, 0.01, (transferFee == null ? "0" : transferFee), targetWalletAddress);
+
             List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile());
 
             return list;

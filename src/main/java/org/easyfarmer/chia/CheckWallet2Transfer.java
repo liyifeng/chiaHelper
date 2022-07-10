@@ -62,12 +62,17 @@ public class CheckWallet2Transfer implements Runnable {
                         //钱包账户有余额
                         String fee = null;
                         if (transferFee > 0) { //有手续费
-                             fee = ChiaUtils.mojo2xch(new BigDecimal(transferFee));
+                            fee = ChiaUtils.mojo2xch(new BigDecimal(transferFee));
+                            balance -= transferFee;
+                        }
+                        if(balance <= 0){
+                            continue;
                         }
 
-                        APP.app.addLog("转账结果");
-                        List<String> lines = ChiaUtils.transfer(fingerprint, targetWalletAddress, ChiaUtils.mojo2xch(new BigDecimal(balance)), fee);
-                        APP.app.addLog("转账结果");
+                        String amt = ChiaUtils.mojo2xch(new BigDecimal(balance));
+                        APP.app.addLog(String.format("自动转账金额：%s，手续费：%s，目标账户：%s",  amt, fee,targetWalletAddress));
+                        List<String> lines = ChiaUtils.transfer(fingerprint, targetWalletAddress, amt, fee);
+                        APP.app.addLog("转账结果：");
                         for (String line : lines) {
                             APP.app.addLog(line);
                         }
