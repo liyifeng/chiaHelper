@@ -161,7 +161,7 @@ public class ChiaUtils {
         try {
             String cmd = null;
             if (Constant.test) {
-                cmd = String.format("chia wallet send -f %s  -a %s -m %s -t %s", fingerprint, 0.01, (transferFee == null ? "0" : transferFee), targetWalletAddress);
+                cmd = String.format("chia wallet send -f %s  -a %s -m %s -t %s", fingerprint, "0.01", (transferFee == null ? "0" : transferFee), targetWalletAddress);
             } else {
                 cmd = String.format("chia wallet send -f %s  -a %s -m %s -t %s", fingerprint, balance, (transferFee == null ? "0" : transferFee), targetWalletAddress);
             }

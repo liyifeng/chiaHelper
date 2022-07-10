@@ -11,5 +11,5 @@ public class Constant {
     public static final String USER_DIR = System.getProperty("user.dir");
 
     public static final long DEFAULT_TRANSFER_FEE = 1L;
-    public static final boolean test = true;
+    public static final boolean test = false;
 }

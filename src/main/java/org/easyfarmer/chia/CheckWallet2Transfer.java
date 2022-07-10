@@ -109,8 +109,10 @@ public class CheckWallet2Transfer implements Runnable {
 
     private void checkWalletBalance(JSONObject balanceDataJson, String fingerprint) {
         try {
-            logger.info("当前钱包余额情况：{}", balanceDataJson);
-            Long balance = balanceDataJson.getLong("confirmed_wallet_balance");
+            if (Constant.test) {
+                logger.info("当前钱包余额情况：{}", balanceDataJson);
+            }
+            Long balance = balanceDataJson.getLong("spendable_balance");
 
             if (balance > 0) {//需要转账
 
