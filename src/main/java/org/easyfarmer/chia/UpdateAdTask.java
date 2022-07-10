@@ -8,12 +8,12 @@ import com.alibaba.fastjson.JSONObject;
 import org.easyfarmer.chia.util.SwingUtils;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.net.URL;
 
 /**
  * @author liyifeng
@@ -57,27 +57,18 @@ public class UpdateAdTask implements Runnable {
             String imgUrl = ad.getString("imgUrl");
             String link = ad.getString("link");
             String title = ad.getString("title");
+            String tip = ad.getString("tip");
             // 没过期
             if (expireMills != null && System.currentTimeMillis() < expireMills.longValue()) {
                 if (StrUtil.isNotBlank(imgUrl)) {
                     try {
-
-// 该方法会将图像加载到内存，从而拿到图像的详细信息。
-
-                    // TODO 待完成
-                        String imgPath = null;
-                        BufferedImage image = ImageIO.read(new FileInputStream(imgPath));
-                    } catch (FileNotFoundException e) {
-
+                        BufferedImage image = ImageIO.read(new URL(imgUrl));
+                        APP.app.topAdLabel.setIcon(new ImageIcon(image));
+                        //BufferedImage image = ImageIO.read(new FileInputStream(imgPath));
+                    } catch (Exception e) {
                         e.printStackTrace();
-
-                    } catch (IOException e) {
-
-                        e.printStackTrace();
-
+                        APP.app.topAdLabel.setText(title);
                     }
-                    APP.app.topAdLabel.setIcon(null);
-                    APP.app.topAdLabel.setText("");
                 }
                 if (StrUtil.isNotBlank(link)) {
                     APP.app.topAdLabel.addMouseListener(new MouseAdapter() {
@@ -86,8 +77,15 @@ public class UpdateAdTask implements Runnable {
                             SwingUtils.jump2Url(link);
                         }
                     });
+                    APP.app.topAdLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                }else{
+                    APP.app.topAdLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                }
+                if(StrUtil.isNotBlank(tip)){
+                    APP.app.topAdLabel.setToolTipText(tip);
                 }
             }
+            APP.app.pack();
         }
     }
 

@@ -23,7 +23,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "topAdLabel"
-				"icon": new com.jformdesigner.model.SwingIcon( 0, "/topAd500x54.jpg" )
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/topAdDefaultImg.jpg" )
 				auxiliary() {
 					"JavaCodeGenerator.variableModifiers": 1
 				}

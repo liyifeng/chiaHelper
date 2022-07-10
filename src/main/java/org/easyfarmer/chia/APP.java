@@ -229,7 +229,7 @@ public class APP extends JFrame {
         contentPane.add(statusValueLabel, "cell 1 1");
 
         //---- topAdLabel ----
-        topAdLabel.setIcon(new ImageIcon(getClass().getResource("/topAd500x54.jpg")));
+        topAdLabel.setIcon(new ImageIcon(getClass().getResource("/img/topAdDefaultImg.jpg")));
         contentPane.add(topAdLabel, "hidemode 3,cell 0 0 2 1,alignx center,grow 0 100");
 
         //---- fingerPrintLabel ----
