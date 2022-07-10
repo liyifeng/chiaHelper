@@ -9,7 +9,6 @@ new FormModel {
 			"$rowConstraints": "[][][][][][][][50:100:500,fill][][]"
 		} ) {
 			name: "this"
-			"$sizePolicy": 1
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
 				"text": "状态："
@@ -23,10 +22,13 @@ new FormModel {
 				"value": "cell 1 1"
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "adLabel"
-				"text": "广告位"
+				name: "topAdLabel"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/topAd500x54.jpg" )
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 0 2 1,grow,hidemode 3"
+				"value": "hidemode 3,cell 0 0 2 1,alignx center,grow 0 100"
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "fingerPrintLabel"

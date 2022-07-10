@@ -27,6 +27,7 @@ public class APP extends JFrame {
     //private static final Logger logger = LoggerFactory.getLogger(APP.class);
 
     public static APP app;
+
     public APP() {
         try {
             FlatLightLaf.setup();
@@ -36,6 +37,7 @@ public class APP extends JFrame {
         initComponents();
         setTitle("奇亚钱包自动转账工具 - www.Easyfarmer.org出品");
         setDefaultFee();
+
 //        chiaWalletAddressTextField.setText("xch1z6nu6nf8dqrjcn6smnmgczqljghgendazve9953dw2qynmruk54qals56z");
     }
 
@@ -43,13 +45,16 @@ public class APP extends JFrame {
         app = new APP();
         app.loadFingerprint();
 
-        Thread thread = new Thread(new CheckWallet2Transfer());
-        thread.start();
+        Thread checkWalletThread = new Thread(new CheckWallet2Transfer());
+        checkWalletThread.start();
+        Thread updateAdThread = new Thread(new UpdateAdTask());
+        updateAdThread.start();
 
         app.setVisible(true);
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
+
 
     private void loadFingerprint() {
         String respJsonStr = ChiaUtils.get_logged_in_fingerprint();
@@ -93,7 +98,7 @@ public class APP extends JFrame {
             }
 
             String feeText = feeTextField.getText();
-            int fee = Constant.DEFAULT_TRANSFER_FEE;
+            long fee = Constant.DEFAULT_TRANSFER_FEE;
             if (StrUtil.isBlank(feeText) || !NumberUtil.isNumber(feeText)) {
                 addLog("转账手续费未设置，自动设置为默认:" + Constant.DEFAULT_TRANSFER_FEE);
                 feeTextField.setText(Constant.DEFAULT_TRANSFER_FEE + "");
@@ -140,7 +145,7 @@ public class APP extends JFrame {
         DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
         label3 = new JLabel();
         statusValueLabel = new JLabel();
-        adLabel = new JLabel();
+        topAdLabel = new JLabel();
         fingerPrintLabel = new JLabel();
         fingerprintValue = new JLabel();
         targetChiaAddressLabel = new JLabel();
@@ -182,9 +187,9 @@ public class APP extends JFrame {
         statusValueLabel.setText("-");
         contentPane.add(statusValueLabel, "cell 1 1");
 
-        //---- adLabel ----
-        adLabel.setText("\u5e7f\u544a\u4f4d");
-        contentPane.add(adLabel, "cell 0 0 2 1,grow,hidemode 3");
+        //---- topAdLabel ----
+        topAdLabel.setIcon(new ImageIcon(getClass().getResource("/topAd500x54.jpg")));
+        contentPane.add(topAdLabel, "hidemode 3,cell 0 0 2 1,alignx center,grow 0 100");
 
         //---- fingerPrintLabel ----
         fingerPrintLabel.setText("\u5f53\u524d\u6307\u7eb9\uff1a");
@@ -231,7 +236,7 @@ public class APP extends JFrame {
         //---- label5 ----
         label5.setText("\u6e90\u7801\uff1ahttps://github.com/liyifeng/chiaHelper");
         contentPane.add(label5, "cell 0 9 2 1");
-        setSize(580, 405);
+        pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -239,7 +244,7 @@ public class APP extends JFrame {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JLabel label3;
     private JLabel statusValueLabel;
-    private JLabel adLabel;
+    public JLabel topAdLabel;
     private JLabel fingerPrintLabel;
     private JLabel fingerprintValue;
     private JLabel targetChiaAddressLabel;

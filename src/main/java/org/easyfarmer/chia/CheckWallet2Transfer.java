@@ -3,6 +3,10 @@ package org.easyfarmer.chia;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.easyfarmer.chia.util.ChiaUtils;
+import org.easyfarmer.chia.util.Constant;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author liyifeng
@@ -13,17 +17,22 @@ public class CheckWallet2Transfer implements Runnable {
 
     private static boolean monitor = false;
     private static String targetWalletAddress;
-    private static Integer transferFee; //转账手续费
+    private static Long transferFee; //转账手续费
 
     public static void stopMonitor() {
         targetWalletAddress = null;
         monitor = false;
     }
 
-    public static void startMonitor(String walletAddress, Integer fee) {
+    public static void startMonitor(String walletAddress, Long fee) {
         monitor = true;
         targetWalletAddress = walletAddress;
-        transferFee = fee;
+        if (fee == null) {
+            transferFee = Constant.DEFAULT_TRANSFER_FEE;
+        } else {
+            transferFee = fee;
+
+        }
     }
 
     @Override
@@ -46,9 +55,22 @@ public class CheckWallet2Transfer implements Runnable {
                 if (chiaRpcSuccess(walletBalanceJson) && walletBalanceJson.containsKey("wallet_balance")) {
                     JSONObject balanceDataJson = walletBalanceJson.getJSONObject("wallet_balance");
                     Long balance = balanceDataJson.getLong("confirmed_wallet_balance");
-                    if (balance > 0) {
+                    String fingerprint = balanceDataJson.getString("fingerprint");
+
+                    if (balance > 0) {//需要转账
+
                         //钱包账户有余额
-                        ChiaUtils.transfer(targetWalletAddress, balance, transferFee);
+                        String fee = null;
+                        if (transferFee > 0) { //有手续费
+                             fee = ChiaUtils.mojo2xch(new BigDecimal(transferFee));
+                        }
+
+                        APP.app.addLog("转账结果");
+                        List<String> lines = ChiaUtils.transfer(fingerprint, targetWalletAddress, ChiaUtils.mojo2xch(new BigDecimal(balance)), fee);
+                        APP.app.addLog("转账结果");
+                        for (String line : lines) {
+                            APP.app.addLog(line);
+                        }
                     }
 
                 }

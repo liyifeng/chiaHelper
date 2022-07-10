@@ -11,6 +11,8 @@ import org.easyfarmer.chia.cmd.KeysShow;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,7 +129,7 @@ public class ChiaUtils {
     }
 
     public static JSONObject get_wallet_balance(Integer walletId) {
-        String resp = execChiaRpcCmd("chia rpc wallet get_wallet_balance {\\\"wallet_id\\\":"+walletId+"}");
+        String resp = execChiaRpcCmd("chia rpc wallet get_wallet_balance {\\\"wallet_id\\\":" + walletId + "}");
         if (resp != null) {
             return JSON.parseObject(resp);
         }
@@ -146,19 +148,46 @@ public class ChiaUtils {
     }
 
     /**
+     * ./chia wallet send -f 2959519667  -a 0.1 -m 0.000000000001 -t xch1mhfe8har266ap9u3gh2qeqmxhqzvk4ramqxp7glnwu2drskgs4yqulfa29
+     * Submitting transaction...
+     * Transaction submitted to nodes: [{'peer_id': '587348e668165bafae3038105a0c08de25e333167ecc1d464c17be9d66276045', 'inclusion_status': 'SUCCESS', 'error_msg': None}]
+     * Run 'chia wallet get_transaction -f 2959519667 -tx 0x90b981bd812a1f37a5403babd9d0dc602d62c39abd42c00099b7977c6f8d3acc' to get status
      *
      * @param targetWalletAddress
      * @param balance
      * @param transferFee
      */
-    public static void transfer(String targetWalletAddress, Long balance, Integer transferFee) {
+    public static List<String> transfer(String fingerprint, String targetWalletAddress, String balance, String transferFee) {
         try {
+            String cmd = String.format("chia wallet send -f %s  -a %s -m %s -t %s", fingerprint, balance, (transferFee == null ? "0" : transferFee), targetWalletAddress);
             System.out.println(String.format("向%s转账%d，费用：%d", targetWalletAddress, balance, transferFee));
-            //List<String> list = CommandUtils.exec(String.format("chia wallet send -a %s -m %d -t %s", balance, transferFee, targetWalletAddress), null, getChiaCmdPathFile());
+            List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile());
+
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return new ArrayList<>();
     }
+
+    private static BigDecimal CHIA_DIVISOR = new BigDecimal("1000000000000");
+
+    public static String mojo2xch(BigDecimal mojoCount) {
+        return new DecimalFormat("0.000000000000").format(mojoCount.divide(CHIA_DIVISOR, 12, RoundingMode.HALF_UP));
+    }
+
+    public static String xch2mojo(BigDecimal xch) {
+        return new DecimalFormat("0.000000000000").format(xch.multiply(CHIA_DIVISOR));
+    }
+
+    public static void main(String[] args) {
+        Long mojo = 22360035380619L;
+        System.out.println(new BigDecimal(mojo).longValue());
+        System.out.println(mojo2xch(new BigDecimal(mojo)));
+        String fee = ChiaUtils.mojo2xch(new BigDecimal(3L));
+        System.out.println(fee);
+    }
+
 
     //  Usage: chia wallet send [OPTIONS]
     //

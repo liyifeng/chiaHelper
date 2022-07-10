@@ -10,5 +10,5 @@ public class Constant {
     public static final String USER_HOME = System.getProperty("user.home");
     public static final String USER_DIR = System.getProperty("user.dir");
 
-    public static final int DEFAULT_TRANSFER_FEE = 0;
+    public static final long DEFAULT_TRANSFER_FEE = 0L;
 }
