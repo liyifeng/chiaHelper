@@ -71,10 +71,14 @@ public class CheckWallet2Transfer implements Runnable {
                 //checkClaim(fingerprint);
 
             } catch (Exception e) {
-                //logger.error("报错", e);
+                logger.error("定时检测任务出错", e);
             } finally {
                 try {
-                    Thread.sleep(10000L);
+                    long sleepMills = 10000L;
+                    if (Constant.test) {
+                        sleepMills = 5000L;
+                    }
+                    Thread.sleep(sleepMills);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

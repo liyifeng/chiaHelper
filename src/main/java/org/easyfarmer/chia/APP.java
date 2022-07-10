@@ -43,7 +43,9 @@ public class APP extends JFrame {
         setTitle("奇亚钱包自动转账工具 - www.Easyfarmer.org出品");
         setDefaultFee();
 
-//        chiaWalletAddressTextField.setText("xch1z6nu6nf8dqrjcn6smnmgczqljghgendazve9953dw2qynmruk54qals56z");
+        if (Constant.test) {
+            chiaWalletAddressTextField.setText("xch1z6nu6nf8dqrjcn6smnmgczqljghgendazve9953dw2qynmruk54qals56z");
+        }
     }
 
     public static void main(String[] args) {
