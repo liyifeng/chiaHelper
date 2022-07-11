@@ -24,13 +24,17 @@ public class CheckWallet2Transfer implements Runnable {
     private static String targetWalletAddress;
     private static Long transferFee; //转账手续费
     private static String fingerprint;
+    private static boolean autoClaim = false;
 
     public static void stopMonitor() {
         targetWalletAddress = null;
         monitor = false;
+        transferFee = null;
+        fingerprint = null;
+        autoClaim = false;
     }
 
-    public static void startMonitor(String walletAddress, String fingerprint, Long fee) {
+    public static void startMonitor(String walletAddress, String fingerprint, Long fee, boolean autoClaim) {
         CheckWallet2Transfer.monitor = true;
         CheckWallet2Transfer.targetWalletAddress = walletAddress;
         if (fee == null) {
@@ -39,6 +43,7 @@ public class CheckWallet2Transfer implements Runnable {
             CheckWallet2Transfer.transferFee = fee;
         }
         CheckWallet2Transfer.fingerprint = fingerprint;
+        CheckWallet2Transfer.autoClaim = autoClaim;
     }
 
     @Override
@@ -64,7 +69,7 @@ public class CheckWallet2Transfer implements Runnable {
                     // 用户登录的指纹变动后监控停止
                     if (!StrUtil.equals(fingerprint, currentFingerprintTmp)) {
                         APP.app.addLog("监控的指纹和当前客户端登录的指纹不匹配，监控停转账停止。监控的指纹：" + fingerprint + ",当前客户端的指纹：" + currentFingerprintTmp);
-                        stopMonitor();
+                        APP.app.set2StopMonitor();
                         continue;
                     }
                 } else {
@@ -75,7 +80,9 @@ public class CheckWallet2Transfer implements Runnable {
                 checkWalletBalance(balanceDataJson, fingerprint);
 
                 // 检查待认领奖励
-                //checkClaim(fingerprint);
+                if (autoClaim) {
+                    checkClaim(fingerprint);
+                }
 
             } catch (Exception e) {
                 logger.error("定时检测任务出错", e);

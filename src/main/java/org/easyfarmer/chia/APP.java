@@ -45,7 +45,7 @@ public class APP extends JFrame {
         initComponents();
         setTitle("奇亚钱包自动转账工具 - www.Easyfarmer.org出品");
         setDefaultFee();
-
+        autoClaimCheckBox.setSelected(true);
         sourceUrlLabel.setForeground(Color.BLUE);
         sourceUrlLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -145,20 +145,24 @@ public class APP extends JFrame {
                 return;
             }
 
+            CheckWallet2Transfer.startMonitor(targetAddress, fingerprint, fee,autoClaimCheckBox.isSelected());
             setFormEnable(false);
-            CheckWallet2Transfer.startMonitor(targetAddress, fingerprint, fee);
             button1.setText(stopBtnText);
             statusValueLabel.setText("运行中");
-            addLog("开始监控钱包余额。");
             statusValueLabel.setForeground(Color.GREEN);
+            addLog("开始监控钱包余额。");
         } else if (button1.getText().equals(stopBtnText)) { //关闭功能
-            setFormEnable(true);
-            CheckWallet2Transfer.stopMonitor();
-            statusValueLabel.setText("已停止");
-            statusValueLabel.setForeground(Color.RED);
-            addLog("停止监控。");
-            button1.setText(startBtnText);
+            set2StopMonitor();
         }
+    }
+
+    public void set2StopMonitor() {
+        CheckWallet2Transfer.stopMonitor();
+        setFormEnable(true);
+        statusValueLabel.setText("已停止");
+        statusValueLabel.setForeground(Color.RED);
+        addLog("停止监控。");
+        button1.setText(startBtnText);
     }
 
     private void setFormEnable(boolean enable) {
@@ -188,6 +192,7 @@ public class APP extends JFrame {
         topAdLabel = new JLabel();
         fingerPrintLabel = new JLabel();
         fingerprintValue = new JLabel();
+        autoClaimCheckBox = new JCheckBox();
         targetChiaAddressLabel = new JLabel();
         chiaWalletAddressTextField = new JTextField();
         feeLabel = new JLabel();
@@ -207,7 +212,8 @@ public class APP extends JFrame {
             "hidemode 3",
             // columns
             "[fill]" +
-            "[200:400:1500,fill]",
+            "[200:200:1500,fill]" +
+            "[200,fill]",
             // rows
             "[]" +
             "[]" +
@@ -230,20 +236,24 @@ public class APP extends JFrame {
 
         //---- topAdLabel ----
         topAdLabel.setIcon(new ImageIcon(getClass().getResource("/img/topAdDefaultImg.jpg")));
-        contentPane.add(topAdLabel, "hidemode 3,cell 0 0 2 1,alignx center,grow 0 100");
+        contentPane.add(topAdLabel, "hidemode 3,cell 0 0 3 1,alignx center,grow 0 100");
 
         //---- fingerPrintLabel ----
-        fingerPrintLabel.setText("\u5f53\u524d\u6307\u7eb9\uff1a");
+        fingerPrintLabel.setText("\u76d1\u63a7\u6307\u7eb9\uff1a");
         contentPane.add(fingerPrintLabel, "cell 0 2,alignx right,growx 0");
 
         //---- fingerprintValue ----
         fingerprintValue.setText("123123123");
         contentPane.add(fingerprintValue, "cell 1 2,alignx left,growx 0");
 
+        //---- autoClaimCheckBox ----
+        autoClaimCheckBox.setText("\u81ea\u52a8\u8ba4\u9886\u5956\u52b1");
+        contentPane.add(autoClaimCheckBox, "cell 2 2");
+
         //---- targetChiaAddressLabel ----
         targetChiaAddressLabel.setText("\u8f6c\u5230\u76ee\u6807\u94b1\u5305\u5730\u5740\uff1a");
         contentPane.add(targetChiaAddressLabel, "cell 0 3,alignx right,growx 0");
-        contentPane.add(chiaWalletAddressTextField, "cell 1 3,growx");
+        contentPane.add(chiaWalletAddressTextField, "cell 1 3 2 1,growx");
 
         //---- feeLabel ----
         feeLabel.setText("\u8f6c\u8d26\u624b\u7eed\u8d39\uff1a");
@@ -256,31 +266,31 @@ public class APP extends JFrame {
         //---- label2 ----
         label2.setText("\u5355\u4f4d\uff1amojo");
         label2.setToolTipText("\u6ce8\u610f\u5355\u4f4d\u662fmojo");
-        contentPane.add(label2, "cell 1 4");
+        contentPane.add(label2, "cell 2 4");
 
         //---- button1 ----
         button1.setText("\u5f00\u542f\u81ea\u52a8\u8f6c\u8d26");
         button1.addActionListener(e -> button1(e));
-        contentPane.add(button1, "cell 0 5 2 1,alignx center,growx 0");
-        contentPane.add(separator1, "cell 0 6 2 1");
+        contentPane.add(button1, "cell 0 5 3 1,alignx center,growx 0");
+        contentPane.add(separator1, "cell 0 6 3 1");
 
         //======== scrollPane1 ========
         {
             scrollPane1.setViewportView(logTextArea);
         }
-        contentPane.add(scrollPane1, "cell 0 7 2 1,grow");
+        contentPane.add(scrollPane1, "cell 0 7 3 1,grow");
 
         //---- label4 ----
         label4.setText("\u672c\u5de5\u5177\u53ea\u9002\u7528Windows\u7cfb\u7edf\uff0c\u5df2\u5f00\u6e90\u3001\u6709\u5e7f\u544a\u3002");
-        contentPane.add(label4, "cell 0 8 2 1");
+        contentPane.add(label4, "cell 0 8 3 1");
 
         //---- label5 ----
         label5.setText("\u6e90\u7801\uff1a");
-        contentPane.add(label5, "cell 0 9 2 1,alignx left,growx 0");
+        contentPane.add(label5, "cell 0 9 3 1,alignx left,growx 0");
 
         //---- sourceUrlLabel ----
         sourceUrlLabel.setText("https://github.com/liyifeng/chiaHelper");
-        contentPane.add(sourceUrlLabel, "cell 0 9 2 1");
+        contentPane.add(sourceUrlLabel, "cell 0 9 3 1");
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -292,6 +302,7 @@ public class APP extends JFrame {
     public JLabel topAdLabel;
     private JLabel fingerPrintLabel;
     private JLabel fingerprintValue;
+    private JCheckBox autoClaimCheckBox;
     private JLabel targetChiaAddressLabel;
     private JTextField chiaWalletAddressTextField;
     private JLabel feeLabel;
