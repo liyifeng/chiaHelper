@@ -139,7 +139,7 @@ public class ChiaUtils {
 
     private static String execChiaRpcCmd(String cmd) {
         try {
-            List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile());
+            List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile(),true);
             return list2String(list);
         } catch (Exception e) {
             logger.info("执行命令出错:" + cmd, e);
@@ -166,7 +166,7 @@ public class ChiaUtils {
                 cmd = String.format("chia wallet send -f %s  -a %s -m %s -t %s", fingerprint, balance, (transferFee == null ? "0" : transferFee), targetWalletAddress);
             }
 
-            List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile());
+            List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile(),true);
 
             return list;
         } catch (Exception e) {
@@ -198,7 +198,7 @@ public class ChiaUtils {
         String cmd = "chia plotnft show -f " + fingerprint;
         List<NftWallet> resultList = new ArrayList<>();
         try {
-            List<String> execResultLineList = CommandUtils.exec(cmd, null, getChiaCmdPathFile());
+            List<String> execResultLineList = CommandUtils.exec(cmd, null, getChiaCmdPathFile(),true);
             NftWallet obj = null;
             List<String> oneWalletLineList = new ArrayList<>();
 
