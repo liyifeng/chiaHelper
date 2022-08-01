@@ -232,7 +232,7 @@ public class ChiaUtils {
 
     //chia plotnft claim -f ${fingerprint} -i ${walletId}  通过该命令认领奖励
     public static String plotNftClaim(String fingerprint, Integer walletId) {
-        String cmd = String.format("chia plotnft claim -f %s -i %d", fingerprint, walletId);
+        String cmd = String.format("chia plotnft claim -f %s -i %s", fingerprint, walletId);
         String claimResp = execChiaRpcCmd(cmd);
         return claimResp;
     }

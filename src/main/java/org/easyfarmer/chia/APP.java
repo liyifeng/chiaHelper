@@ -168,6 +168,7 @@ public class APP extends JFrame {
 
     private void setFormEnable(boolean enable) {
         chiaWalletAddressTextField.setEnabled(enable);
+        autoClaimCheckBox.setEnabled(enable);
         feeTextField.setEnabled(enable);
     }
 

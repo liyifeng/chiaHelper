@@ -103,11 +103,11 @@ public class CheckWallet2Transfer implements Runnable {
     // 检查待认领待奖励
     private void checkClaim(String fingerprint) {
         try {
-
+            System.out.println("检查是否有待认领的奖励");
             List<NftWallet> nftWalletList = ChiaUtils.plotNftShow(fingerprint);
-
             if (nftWalletList != null && nftWalletList.size() > 0) {
                 for (NftWallet nftWallet : nftWalletList) {
+                    System.out.println("钱包信息:"+nftWallet);
                     if (nftWallet.getClaimableBalanceMojo() > 0) {
                         logger.info("认领奖励,walletId:{},金额:{},launchId:{}", nftWallet.getWalletId(), nftWallet.getClaimableBalanceXch(), nftWallet.getLauncherId());
                         String claimResp = ChiaUtils.plotNftClaim(fingerprint, nftWallet.getWalletId());

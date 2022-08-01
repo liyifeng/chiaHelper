@@ -181,5 +181,19 @@ public class NftWallet extends ChiaForkResult {
         this.claimableBalanceXch = claimableBalanceXch;
     }
 
-
+    @Override
+    public String toString() {
+        return "NftWallet{" +
+                "walletId=" + walletId +
+                ", currentState='" + currentState + '\'' +
+                ", currentStateFromBlockHeight=" + currentStateFromBlockHeight +
+                ", launcherId='" + launcherId + '\'' +
+                ", targetAddress='" + targetAddress + '\'' +
+                ", numberOfPlots='" + numberOfPlots + '\'' +
+                ", ownerPublicKey='" + ownerPublicKey + '\'' +
+                ", poolContractAddress='" + poolContractAddress + '\'' +
+                ", claimableBalanceMojo=" + claimableBalanceMojo +
+                ", claimableBalanceXch=" + claimableBalanceXch +
+                '}';
+    }
 }
