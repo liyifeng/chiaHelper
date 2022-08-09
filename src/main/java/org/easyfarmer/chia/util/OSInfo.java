@@ -111,14 +111,6 @@ public class OSInfo {
         return false;
     }
 
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        System.out.println(OSInfo.isWindows());// 判断是否为windows系统
-    }
-
     public static String getOsName() {
 //        if (isWindows()) {
 //            return "Windows";

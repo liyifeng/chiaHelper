@@ -185,14 +185,6 @@ public class ChiaUtils {
         return new DecimalFormat("0.000000000000").format(xch.multiply(CHIA_DIVISOR));
     }
 
-    public static void main(String[] args) {
-        Long mojo = 22360035380619L;
-        System.out.println(new BigDecimal(mojo).longValue());
-        System.out.println(mojo2xch(new BigDecimal(mojo)));
-        String fee = ChiaUtils.mojo2xch(new BigDecimal(3L));
-        System.out.println(fee);
-    }
-
     // chia plotnft show -f ${fingerprint} 列出所有可认领待列表
     public static List<NftWallet> plotNftShow(String fingerprint) {
         String cmd = "chia plotnft show -f " + fingerprint;
