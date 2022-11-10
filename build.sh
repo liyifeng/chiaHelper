@@ -1,8 +1,9 @@
 #!/bin/bash
-time=$(date +%y%m%d_%H%M)
+#time=$(date +%y%m%d_%H%M)
+time=$(date +%y%m%d)
 fatJarName=chiaAutoTransfer-1.0-jar-with-dependencies.jar
 finalJarName=chiaAutoTransfer.jar
-finalReleaseZipName=chiaAutoTransfer-$time.zip
+finalReleaseZipName=chiaAutoTransfer-windows-$time.zip
 
 #https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jre/x64/windows/OpenJDK8U-jre_x64_windows_hotspot_8u332b09.zip
 
