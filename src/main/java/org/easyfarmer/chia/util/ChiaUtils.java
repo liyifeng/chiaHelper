@@ -38,9 +38,13 @@ public class ChiaUtils {
 
         return sb.toString();
     }
-
+    // 1.6.1之后 windows的路径
+    private static final File DEAMON_PATH_AFTER_161 = new File("C:\\Program Files\\Chia\\resources\\app.asar.unpacked\\daemon");
 
     public static File getChiaCmdPathFile() {
+        if(DEAMON_PATH_AFTER_161.exists()){
+            return DEAMON_PATH_AFTER_161;
+        }
         return getCmdPathByProgramPath("chia-blockchain");
     }
 

@@ -44,7 +44,7 @@ public class APP extends JFrame {
         }
         initComponents();
         setTitle("奇亚钱包自动转账工具 - www.Easyfarmer.org出品");
-        setDefaultFee();
+        loadLastConfigContent();
         autoClaimCheckBox.setSelected(true);
         sourceUrlLabel.setForeground(Color.BLUE);
         sourceUrlLabel.addMouseListener(new MouseAdapter() {
@@ -57,6 +57,8 @@ public class APP extends JFrame {
         if (Constant.test) {
             chiaWalletAddressTextField.setText("xch1z6nu6nf8dqrjcn6smnmgczqljghgendazve9953dw2qynmruk54qals56z");
         }
+
+
     }
 
     public static void main(String[] args) {
@@ -146,6 +148,9 @@ public class APP extends JFrame {
                 return;
             }
 
+            // 写入配置文件
+            ConfigUtils.save(targetAddress, "" + fee);
+
             CheckWallet2Transfer.startMonitor(targetAddress, fingerprint, fee, autoClaimCheckBox.isSelected());
             setFormEnable(false);
             button1.setText(stopBtnText);
@@ -172,13 +177,14 @@ public class APP extends JFrame {
         feeTextField.setEnabled(enable);
     }
 
-    private void feeDefaultBtn(ActionEvent e) {
-        setDefaultFee();
+    private void loadLastConfigContent() {
+        String lastAddress = ConfigUtils.getReceivedAddress();
+        Integer lastFee = ConfigUtils.getFee();
+        chiaWalletAddressTextField.setText(lastAddress);
+
+        feeTextField.setText((lastFee != null ? lastFee : Constant.DEFAULT_TRANSFER_FEE) + "");
     }
 
-    private void setDefaultFee() {
-        feeTextField.setText("" + Constant.DEFAULT_TRANSFER_FEE);
-    }
 
     public void addLog(String log) {
         logger.info(log);
@@ -188,6 +194,7 @@ public class APP extends JFrame {
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        // Generated using JFormDesigner Evaluation license - 壹峰李
         DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
         label3 = new JLabel();
         statusValueLabel = new JLabel();
@@ -215,7 +222,7 @@ public class APP extends JFrame {
                 // columns
                 "[fill]" +
                         "[200:200:1500,fill]" +
-                        "[200,fill]",
+                        "[200,grow,fill]",
                 // rows
                 "[]" +
                         "[]" +
@@ -224,7 +231,7 @@ public class APP extends JFrame {
                         "[]" +
                         "[]" +
                         "[]" +
-                        "[100:n:1500,fill]" +
+                        "[100:n:1500,grow,fill]" +
                         "[]" +
                         "[]"));
 
@@ -293,12 +300,13 @@ public class APP extends JFrame {
         //---- sourceUrlLabel ----
         sourceUrlLabel.setText("https://github.com/liyifeng/chiaHelper");
         contentPane.add(sourceUrlLabel, "cell 0 9 3 1");
-        pack();
+        setSize(605, 525);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // Generated using JFormDesigner Evaluation license - 壹峰李
     private JLabel label3;
     private JLabel statusValueLabel;
     public JLabel topAdLabel;

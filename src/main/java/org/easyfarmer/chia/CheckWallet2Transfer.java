@@ -108,7 +108,7 @@ public class CheckWallet2Transfer implements Runnable {
             if (nftWalletList != null && nftWalletList.size() > 0) {
                 for (NftWallet nftWallet : nftWalletList) {
                     //System.out.println("钱包信息:"+nftWallet);
-                    if (nftWallet.getClaimableBalanceMojo() > 0) {
+                    if (nftWallet.getClaimableBalanceMojo() != null && nftWallet.getClaimableBalanceMojo().longValue() > 0) {
                         logger.info("认领奖励,walletId:{},金额:{},launchId:{}", nftWallet.getWalletId(), nftWallet.getClaimableBalanceXch(), nftWallet.getLauncherId());
                         String claimResp = ChiaUtils.plotNftClaim(fingerprint, nftWallet.getWalletId());
                         logger.info("认领结果:{}", claimResp);

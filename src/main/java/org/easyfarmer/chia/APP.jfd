@@ -1,14 +1,15 @@
-JFDML JFormDesigner: "7.0.5.4.420" Java: "11.0.10" encoding: "UTF-8"
+JFDML JFormDesigner: "8.0.0.0.194" Java: "11.0.15" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 			"$layoutConstraints": "hidemode 3"
-			"$columnConstraints": "[fill][200:200:1500,fill][200,fill]"
-			"$rowConstraints": "[][][][][][][][100:n:1500,fill][][]"
+			"$columnConstraints": "[fill][200:200:1500,fill][200,grow,fill]"
+			"$rowConstraints": "[][][][][][][][100:n:1500,grow,fill][][]"
 		} ) {
 			name: "this"
+			"$sizePolicy": 1
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
 				"text": "监控状态："
