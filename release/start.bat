@@ -20,9 +20,9 @@ if "%option%"=="1" goto start
 if "%option%"=="2" goto startAndKeepTerminal
 
 :start
-start javaw -jar chiaAutoTransfer.jar
+start javaw -jar chia-helper.jar
 exit
 
 :startAndKeepTerminal
-java -jar chiaAutoTransfer.jar
+java -jar chia-helper.jar
 goto head
