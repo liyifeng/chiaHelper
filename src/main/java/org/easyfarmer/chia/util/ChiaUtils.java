@@ -38,14 +38,23 @@ public class ChiaUtils {
 
         return sb.toString();
     }
+
     // 1.6.1之后 windows的路径
-    private static final File DEAMON_PATH_AFTER_161 = new File("C:\\Program Files\\Chia\\resources\\app.asar.unpacked\\daemon");
+    private static final File GLOBAL_DEAMON_PATH_AFTER_161 = new File("C:\\Program Files\\Chia\\resources\\app.asar.unpacked\\daemon");
+    private static final String USER_DAEMON_PATH_URL = String.format("%s\\AppData\\Local\\Programs\\Chia\\resources\\app.asar.unpacked\\daemon", Constant.USER_HOME);
+    private static final File USER_DEAMON_PATH_AFTER_161 = new File(USER_DAEMON_PATH_URL);
 
     public static File getChiaCmdPathFile() {
-        if(DEAMON_PATH_AFTER_161.exists()){
-            return DEAMON_PATH_AFTER_161;
+
+        if (USER_DEAMON_PATH_AFTER_161.exists()) { //安装在用户目录
+            return USER_DEAMON_PATH_AFTER_161;
         }
-        return getCmdPathByProgramPath("chia-blockchain");
+
+        if (GLOBAL_DEAMON_PATH_AFTER_161.exists()) { // 安装在全局
+            return GLOBAL_DEAMON_PATH_AFTER_161;
+        }
+
+        return getCmdPathByProgramPath("chia-blockchain"); // 老版本
     }
 
     public static File getCmdPathByProgramPath(String programFolderName) {
@@ -143,7 +152,7 @@ public class ChiaUtils {
 
     private static String execChiaRpcCmd(String cmd) {
         try {
-            List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile(),true);
+            List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile(), true);
             return list2String(list);
         } catch (Exception e) {
             logger.info("执行命令出错:" + cmd, e);
@@ -170,7 +179,7 @@ public class ChiaUtils {
                 cmd = String.format("chia wallet send -f %s  -a %s -m %s -t %s", fingerprint, balance, (transferFee == null ? "0" : transferFee), targetWalletAddress);
             }
 
-            List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile(),true);
+            List<String> list = CommandUtils.exec(cmd, null, getChiaCmdPathFile(), true);
 
             return list;
         } catch (Exception e) {
@@ -194,7 +203,7 @@ public class ChiaUtils {
         String cmd = "chia plotnft show -f " + fingerprint;
         List<NftWallet> resultList = new ArrayList<>();
         try {
-            List<String> execResultLineList = CommandUtils.exec(cmd, null, getChiaCmdPathFile(),true);
+            List<String> execResultLineList = CommandUtils.exec(cmd, null, getChiaCmdPathFile(), true);
             NftWallet obj = null;
             List<String> oneWalletLineList = new ArrayList<>();
 
