@@ -141,7 +141,7 @@ public class CheckWallet2Transfer implements Runnable {
                 }
 
                 String amt = ChiaUtils.mojo2xch(new BigDecimal(balance));
-                APP.app.addLog(String.format("自动转账金额：%s，手续费：%s，目标账户：%s", amt, fee, targetWalletAddress));
+                APP.app.addLog(String.format("自动转账金额：%s，手续费：%s，目标账户：%s", amt, (fee == null ? 0 : fee), targetWalletAddress));
                 List<String> lines = ChiaUtils.transfer(fingerprint, targetWalletAddress, amt, fee);
                 APP.app.addLog("转账结果：" + ChiaUtils.list2String(lines));
                 for (String line : lines) {

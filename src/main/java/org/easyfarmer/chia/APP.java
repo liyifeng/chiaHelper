@@ -20,9 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 
 /**
@@ -42,8 +40,15 @@ public class APP extends JFrame {
         } catch (Exception ex) {
             //logger.error("设置主题失败", ex);
         }
+        setSize(new Dimension(565, 408));
+        //addComponentListener(new ComponentAdapter() {
+        //    @Override
+        //    public void componentResized(ComponentEvent e) {
+        //        System.out.println("窗口大小：" + getSize());
+        //    }
+        //});
         initComponents();
-        setTitle("奇亚钱包自动转账工具 - www.Easyfarmer.org出品");
+        //setTitle("奇亚钱包自动转账工具 - www.easyfarmer.org出品");
         loadLastConfigContent();
         autoClaimCheckBox.setSelected(true);
         sourceUrlLabel.setForeground(Color.BLUE);
@@ -191,10 +196,44 @@ public class APP extends JFrame {
         logTextArea.append(DateUtil.now() + " " + log + "\n");
     }
 
+    private void showCursor(MouseEvent e) {
+        JLabel label = (JLabel) e.getSource();
+        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+
+    private void removeCursor(MouseEvent e) {
+        JLabel label = (JLabel) e.getSource();
+        label.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }
+
+    private void sourceUrlLabelMouseEntered(MouseEvent e) {
+        showCursor(e);
+    }
+
+    private void sourceUrlLabelMouseExited(MouseEvent e) {
+        removeCursor(e);
+    }
+
+    private void label6MouseEntered(MouseEvent e) {
+        showCursor(e);
+    }
+
+    private void label6MouseExited(MouseEvent e) {
+        removeCursor(e);
+    }
+
+    private void sourceUrlLabelMouseClicked(MouseEvent e) {
+        SwingUtils.jump2Url("https://github.com/liyifeng/chiaHelper");
+    }
+
+    private void label6MouseClicked(MouseEvent e) {
+        SwingUtils.jump2Url("http://www.easyfarmer.org");
+
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - 壹峰李
         DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
         label3 = new JLabel();
         statusValueLabel = new JLabel();
@@ -214,26 +253,30 @@ public class APP extends JFrame {
         label4 = new JLabel();
         label5 = new JLabel();
         sourceUrlLabel = new JLabel();
+        label1 = new JLabel();
+        websiteLabel = new JLabel();
 
         //======== this ========
+        setTitle("\u5947\u4e9a\u94b1\u5305\u81ea\u52a8\u8f6c\u8d26\u5de5\u5177 v0.1.4      www.easyfarmer.org\u51fa\u54c1");
         Container contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                        "[200:200:1500,fill]" +
-                        "[200,grow,fill]",
-                // rows
-                "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[100:n:1500,grow,fill]" +
-                        "[]" +
-                        "[]"));
+            "hidemode 3",
+            // columns
+            "[fill]" +
+            "[200:200:1500,fill]" +
+            "[200,grow,fill]",
+            // rows
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[]" +
+            "[100:n:1500,grow,fill]" +
+            "[]" +
+            "[]" +
+            "[]"));
 
         //---- label3 ----
         label3.setText("\u76d1\u63a7\u72b6\u6001\uff1a");
@@ -299,14 +342,50 @@ public class APP extends JFrame {
 
         //---- sourceUrlLabel ----
         sourceUrlLabel.setText("https://github.com/liyifeng/chiaHelper");
+        sourceUrlLabel.setForeground(Color.blue);
+        sourceUrlLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                sourceUrlLabelMouseClicked(e);
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                sourceUrlLabelMouseEntered(e);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                sourceUrlLabelMouseExited(e);
+            }
+        });
         contentPane.add(sourceUrlLabel, "cell 0 9 3 1");
-        setSize(605, 525);
+
+        //---- label1 ----
+        label1.setText("\u5b98\u7f51\uff1a");
+        contentPane.add(label1, "cell 0 10 2 1,alignx left,growx 0");
+
+        //---- websiteLabel ----
+        websiteLabel.setText("http://www.easyfarmer.org");
+        websiteLabel.setForeground(Color.blue);
+        websiteLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                label6MouseClicked(e);
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                label6MouseEntered(e);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                label6MouseExited(e);
+            }
+        });
+        contentPane.add(websiteLabel, "cell 0 10 2 1");
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - 壹峰李
     private JLabel label3;
     private JLabel statusValueLabel;
     public JLabel topAdLabel;
@@ -325,5 +404,7 @@ public class APP extends JFrame {
     private JLabel label4;
     private JLabel label5;
     private JLabel sourceUrlLabel;
+    private JLabel label1;
+    private JLabel websiteLabel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
