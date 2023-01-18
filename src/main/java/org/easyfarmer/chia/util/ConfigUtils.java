@@ -1,14 +1,13 @@
-package org.easyfarmer.chia;
+package org.easyfarmer.chia.util;
 
 import cn.hutool.core.io.resource.FileResource;
-import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import org.easyfarmer.chia.util.Constant;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 public class ConfigUtils {
@@ -18,6 +17,7 @@ public class ConfigUtils {
     private static Properties properties = new Properties();
     private static final String address_key = "address";
     private static final String fee_key = "fee";
+    private static final String CHIA_PATH_KEY = "chia_path";
 
     static {
         loadConfig();
@@ -51,8 +51,16 @@ public class ConfigUtils {
 
     public static Integer getFee() {
         String obj = properties.getProperty(fee_key);
-        if (StrUtil.isNotBlank(obj) && NumberUtil.isInteger(obj)) {
+        if (obj != null && StrUtil.isNotBlank(obj) && NumberUtil.isInteger(obj)) {
             return Integer.parseInt(obj);
+        }
+        return null;
+    }
+
+    public static File getChiaPath() {
+        String obj = properties.getProperty(CHIA_PATH_KEY);
+        if (obj != null && StrUtil.isNotBlank(obj)) {
+            return new File(obj);
         }
         return null;
     }
@@ -60,6 +68,9 @@ public class ConfigUtils {
     public static void save(String address, String fee) {
         properties.put(address_key, address);
         properties.put(fee_key, fee);
+        File chiaCmdPathFile = ChiaUtils.getChiaCmdPathFile();
+        properties.put(CHIA_PATH_KEY, chiaCmdPathFile != null ? chiaCmdPathFile.getAbsolutePath() : "");
+
         saveToFile();
     }
 

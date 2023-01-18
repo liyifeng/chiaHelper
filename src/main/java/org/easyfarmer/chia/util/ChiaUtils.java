@@ -12,8 +12,8 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * @author liyifeng
@@ -26,7 +26,13 @@ public class ChiaUtils {
     public static String get_logged_in_fingerprint() {
         return execChiaRpcCmd("chia rpc wallet get_logged_in_fingerprint");
     }
-
+    // 替换路径中的分隔符
+    public static String formatDirPath(String path) {
+        if (path == null) {
+            return null;
+        }
+        return path.replaceAll("/", Matcher.quoteReplacement(File.separator)).replaceAll("\\\\", Matcher.quoteReplacement(File.separator));
+    }
 
     public static String list2String(List<String> lines) {
         StringBuilder sb = new StringBuilder();
@@ -40,11 +46,16 @@ public class ChiaUtils {
     }
 
     // 1.6.1之后 windows的路径
-    private static final File GLOBAL_DEAMON_PATH_AFTER_161 = new File("C:\\Program Files\\Chia\\resources\\app.asar.unpacked\\daemon");
-    private static final String USER_DAEMON_PATH_URL = String.format("%s\\AppData\\Local\\Programs\\Chia\\resources\\app.asar.unpacked\\daemon", Constant.USER_HOME);
+    private static final File GLOBAL_DEAMON_PATH_AFTER_161 = new File(formatDirPath("C:/Program Files/Chia/resources/app.asar.unpacked/daemon"));
+    private static final String USER_DAEMON_PATH_URL = String.format(formatDirPath("%s/AppData/Local/Programs/Chia/resources/app.asar.unpacked/daemon"), Constant.USER_HOME);
     private static final File USER_DEAMON_PATH_AFTER_161 = new File(USER_DAEMON_PATH_URL);
 
+    private static File USER_DAEMON_PATH_FILE = null; //缓存字段
+
     public static File getChiaCmdPathFile() {
+        if (USER_DAEMON_PATH_FILE != null && USER_DAEMON_PATH_FILE.exists()) {
+            return USER_DAEMON_PATH_FILE;
+        }
 
         if (USER_DEAMON_PATH_AFTER_161.exists()) { //安装在用户目录
             return USER_DEAMON_PATH_AFTER_161;
@@ -53,8 +64,80 @@ public class ChiaUtils {
         if (GLOBAL_DEAMON_PATH_AFTER_161.exists()) { // 安装在全局
             return GLOBAL_DEAMON_PATH_AFTER_161;
         }
+        File path = null;
+        try {
+            path = getCmdPathByProgramPath("chia-blockchain"); // 老版本
+        } catch (Exception e) {
+            logger.error("自动寻找Chia默认目录失败", e);
+        }
+        if (path != null && path.exists()) {
+            USER_DAEMON_PATH_FILE = path;
+            return path;
+        }
 
-        return getCmdPathByProgramPath("chia-blockchain"); // 老版本
+        // 自动搜索
+        path = scanChiaPath();
+        USER_DAEMON_PATH_FILE = path;
+        return path;
+    }
+
+    private static final int MAX_SCAN_DEEP = 5;
+
+    private static File scanChiaPath() {
+        logger.info("开始寻找奇亚主程序目录...");
+        for (File dir : File.listRoots()) {
+            logger.info("寻找目录:{}", dir);
+            File path = scanDirForChiaPath(dir, 1);
+            if (path != null) {
+                return new File(path, "resources" + File.separator + "app.asar.unpacked" + File.separator + "daemon");
+            }
+        }
+        return null;
+    }
+
+    private static File scanDirForChiaPath(File dir, int deep) {
+        if (dir == null || !dir.exists() || deep > MAX_SCAN_DEEP) {
+            return null;
+        }
+        File[] files = dir.listFiles();
+        if (files == null || files.length == 0) {
+            return null;
+        }
+        File targetDir = null;
+        for (File file : files) {
+            if (file.isDirectory() && file.exists()) {
+                logger.info("搜索子目录:{}", file);
+                if (file.getName().equals("Chia") && new File(file, "resources").exists()) {
+                    targetDir = file;
+                    break;
+                } else {
+                    targetDir = scanDirForChiaPath(file, deep + 1);
+                    if (targetDir != null && targetDir.exists()) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return targetDir;
+    }
+
+    private static Set<File> EXCLUDE_WINDOWS_DIR_SET = new HashSet<>(Arrays.asList(new File("$RECYCLE.BIN"), new File("System Volume Information")));
+
+    public static boolean isExcludeDirOfWindows(String dir) {
+        return isExcludeDirOfWindows(new File(dir));
+    }
+
+    public static boolean isExcludeDirOfWindows(File dir) {
+        if (dir == null) {
+            return false;
+        }
+        for (File path : EXCLUDE_WINDOWS_DIR_SET) {
+            if (path.equals(dir) || StrUtil.equalsIgnoreCase(path.getAbsolutePath(), dir.getAbsolutePath())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static File getCmdPathByProgramPath(String programFolderName) {
@@ -62,10 +145,10 @@ public class ChiaUtils {
             //throw new RuntimeException("主程序目录名称为空，无法获取该币种的完整程序目录");
             return null;
         }
-        String coinBasePath = String.format("%s\\AppData\\Local\\%s", System.getProperty("user.home"), programFolderName);
+        String coinBasePath = String.format(formatDirPath("%s/AppData/Local/%s"), System.getProperty("user.home"), programFolderName);
         File file = new File(coinBasePath);
         if (!file.exists()) {
-            throw new RuntimeException("币种主程序目录不存在：" + coinBasePath);
+            throw new RuntimeException("Chia主程序目录不存在：" + coinBasePath);
         }
         String appVersionFolder = findAppVersionFolder(file);
         if (appVersionFolder == null) {

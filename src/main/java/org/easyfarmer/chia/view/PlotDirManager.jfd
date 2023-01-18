@@ -1,0 +1,57 @@
+JFDML JFormDesigner: "8.0.0.0.194" Java: "17.0.3" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+			"$layoutConstraints": "hidemode 3"
+			"$columnConstraints": "[fill][grow,fill]"
+			"$rowConstraints": "[][][]"
+		} ) {
+			name: "this"
+			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+				name: "tabbedPane1"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+					"$layoutConstraints": "hidemode 3"
+					"$columnConstraints": "[grow,fill][fill][fill]"
+					"$rowConstraints": "[][][]"
+				} ) {
+					name: "panel1"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane1"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "list1"
+						} )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 0 3 1"
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button1"
+						"text": "自动搜索"
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 1,alignx right,growx 0"
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button2"
+						"text": "批量添加"
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 1 1"
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button3"
+						"text": "自动添加"
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 2 1"
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": "图管理"
+				} )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0 2 2"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 300 )
+		} )
+	}
+}

@@ -96,7 +96,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>org.easyfarmer.chia.APP</mainClass>
+                            <mainClass>org.easyfarmer.chia.view.AutoTransferDialog</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

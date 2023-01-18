@@ -1,0 +1,148 @@
+JFDML JFormDesigner: "8.0.0.0.194" Java: "17.0.3" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+			"$layoutConstraints": "hidemode 3"
+			"$columnConstraints": "[fill][200:250:500,fill][250:250:500,fill]"
+			"$rowConstraints": "[][][][][][][][100:n:1500,grow,fill][][][]"
+		} ) {
+			name: "this"
+			"title": "奇亚钱包自动转账工具 v0.1.5      2023.1.18"
+			"resizable": false
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "监控状态："
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 1,alignx right,growx 0"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "statusValueLabel"
+				"text": "-"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 1"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "topAdLabel"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/img/topAdDefaultImg.jpg" )
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "hidemode 3,cell 0 0 3 1,alignx center,grow 0 100"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "fingerPrintLabel"
+				"text": "监控指纹："
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 2,alignx right,growx 0"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "fingerprintValue"
+				"text": "123123123"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 2,alignx left,growx 0"
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "autoClaimCheckBox"
+				"text": "自动认领奖励"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 2"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "targetChiaAddressLabel"
+				"text": "转到目标钱包地址："
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 3,alignx right,growx 0"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "chiaWalletAddressTextField"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 3 2 1,growx"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "feeLabel"
+				"text": "转账手续费："
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 4,alignx right,growx 0"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "feeTextField"
+				"toolTipText": "单位是mojo，给些手续费可以加快确认速度，例如填：1表示0.000000000001xch。"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 4,grow"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "单位：mojo"
+				"toolTipText": "注意单位是mojo"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 4"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"text": "开启自动转账"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 5 3 1,alignx center,growx 0"
+			} )
+			add( new FormComponent( "com.jformdesigner.designer.wrapper.JGoodiesFormsSeparator" ) {
+				name: "separator1"
+				"text": "操作记录"
+				"alignment": 0
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 6 3 1"
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "logTextArea"
+				} )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 7 3 1,grow"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "本工具只适用Windows系统，已开源、有广告。"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 8 3 1"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "源码："
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 9 3 1,alignx left,growx 0"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "sourceUrlLabel"
+				"text": "https://github.com/liyifeng/chiaHelper"
+				"foreground": sfield java.awt.Color blue
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseEntered", "sourceUrlLabelMouseEntered", true ) )
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseExited", "sourceUrlLabelMouseExited", true ) )
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "sourceUrlLabelMouseClicked", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 9 3 1"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "官网："
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 10 2 1,alignx left,growx 0"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "websiteLabel"
+				"text": "http://www.easyfarmer.org"
+				"foreground": sfield java.awt.Color blue
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseEntered", "label6MouseEntered", true ) )
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseExited", "label6MouseExited", true ) )
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "label6MouseClicked", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 10 2 1"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 540, 515 )
+		} )
+	}
+}

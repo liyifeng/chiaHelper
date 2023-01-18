@@ -6,6 +6,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.easyfarmer.chia.util.SwingUtils;
+import org.easyfarmer.chia.view.AutoTransferDialog;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -63,29 +64,29 @@ public class UpdateAdTask implements Runnable {
                 if (StrUtil.isNotBlank(imgUrl)) {
                     try {
                         BufferedImage image = ImageIO.read(new URL(imgUrl));
-                        APP.app.topAdLabel.setIcon(new ImageIcon(image));
+                        AutoTransferDialog.autoTransferDialog.topAdLabel.setIcon(new ImageIcon(image));
                         //BufferedImage image = ImageIO.read(new FileInputStream(imgPath));
                     } catch (Exception e) {
                         e.printStackTrace();
-                        APP.app.topAdLabel.setText(title);
+                        AutoTransferDialog.autoTransferDialog.topAdLabel.setText(title);
                     }
                 }
                 if (StrUtil.isNotBlank(link)) {
-                    APP.app.topAdLabel.addMouseListener(new MouseAdapter() {
+                    AutoTransferDialog.autoTransferDialog.topAdLabel.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
                             SwingUtils.jump2Url(link);
                         }
                     });
-                    APP.app.topAdLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    AutoTransferDialog.autoTransferDialog.topAdLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 }else{
-                    APP.app.topAdLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                    AutoTransferDialog.autoTransferDialog.topAdLabel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 }
                 if(StrUtil.isNotBlank(tip)){
-                    APP.app.topAdLabel.setToolTipText(tip);
+                    AutoTransferDialog.autoTransferDialog.topAdLabel.setToolTipText(tip);
                 }
             }
-            APP.app.pack();
+            AutoTransferDialog.autoTransferDialog.pack();
         }
     }
 

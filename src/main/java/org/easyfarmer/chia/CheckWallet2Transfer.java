@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.easyfarmer.chia.cmd.NftWallet;
 import org.easyfarmer.chia.util.ChiaUtils;
 import org.easyfarmer.chia.util.Constant;
+import org.easyfarmer.chia.view.AutoTransferDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,8 +69,8 @@ public class CheckWallet2Transfer implements Runnable {
                     String currentFingerprintTmp = balanceDataJson.getString("fingerprint");
                     // 用户登录的指纹变动后监控停止
                     if (!StrUtil.equals(fingerprint, currentFingerprintTmp)) {
-                        APP.app.addLog("监控的指纹和当前客户端登录的指纹不匹配，监控停转账停止。监控的指纹：" + fingerprint + ",当前客户端的指纹：" + currentFingerprintTmp);
-                        APP.app.set2StopMonitor();
+                        AutoTransferDialog.autoTransferDialog.addLog("监控的指纹和当前客户端登录的指纹不匹配，监控停转账停止。监控的指纹：" + fingerprint + ",当前客户端的指纹：" + currentFingerprintTmp);
+                        AutoTransferDialog.autoTransferDialog.set2StopMonitor();
                         continue;
                     }
                 } else {
@@ -141,11 +142,11 @@ public class CheckWallet2Transfer implements Runnable {
                 }
 
                 String amt = ChiaUtils.mojo2xch(new BigDecimal(balance));
-                APP.app.addLog(String.format("自动转账金额：%s，手续费：%s，目标账户：%s", amt, (fee == null ? 0 : fee), targetWalletAddress));
+                AutoTransferDialog.autoTransferDialog.addLog(String.format("自动转账金额：%s，手续费：%s，目标账户：%s", amt, (fee == null ? 0 : fee), targetWalletAddress));
                 List<String> lines = ChiaUtils.transfer(fingerprint, targetWalletAddress, amt, fee);
-                APP.app.addLog("转账结果：" + ChiaUtils.list2String(lines));
+                AutoTransferDialog.autoTransferDialog.addLog("转账结果：" + ChiaUtils.list2String(lines));
                 for (String line : lines) {
-                    APP.app.addLog(line);
+                    AutoTransferDialog.autoTransferDialog.addLog(line);
                 }
             }
 
