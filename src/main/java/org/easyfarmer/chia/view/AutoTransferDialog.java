@@ -155,11 +155,11 @@ public class AutoTransferDialog extends JFrame {
                 JOptionPane.showMessageDialog(this, "未读取到指纹信息，请确保奇亚客户端已经启动！");
                 return;
             }
-
+            Integer sleepInterval = (Integer) sleepIntevalSpinner.getValue();
             // 写入配置文件
             ConfigUtils.save(targetAddress, "" + fee);
 
-            CheckWallet2Transfer.startMonitor(targetAddress, fingerprint, fee, autoClaimCheckBox.isSelected());
+            CheckWallet2Transfer.startMonitor(targetAddress, fingerprint, fee, autoClaimCheckBox.isSelected(), sleepInterval);
             setFormEnable(false);
             button1.setText(stopBtnText);
             statusValueLabel.setText("运行中");
@@ -244,6 +244,9 @@ public class AutoTransferDialog extends JFrame {
         fingerPrintLabel = new JLabel();
         fingerprintValue = new JLabel();
         autoClaimCheckBox = new JCheckBox();
+        label6 = new JLabel();
+        sleepIntevalSpinner = new JSpinner();
+        label7 = new JLabel();
         targetChiaAddressLabel = new JLabel();
         chiaWalletAddressTextField = new JTextField();
         feeLabel = new JLabel();
@@ -260,7 +263,7 @@ public class AutoTransferDialog extends JFrame {
         websiteLabel = new JLabel();
 
         //======== this ========
-        setTitle("\u5947\u4e9a\u94b1\u5305\u81ea\u52a8\u8f6c\u8d26\u5de5\u5177 v0.1.5      2023.1.18");
+        setTitle("\u5947\u4e9a\u94b1\u5305\u81ea\u52a8\u8f6c\u8d26\u5de5\u5177 v0.1.6      2023.3.6");
         setResizable(false);
         Container contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
@@ -270,6 +273,7 @@ public class AutoTransferDialog extends JFrame {
             "[200:250:500,fill]" +
             "[250:250:500,fill]",
             // rows
+            "[]" +
             "[]" +
             "[]" +
             "[]" +
@@ -306,43 +310,55 @@ public class AutoTransferDialog extends JFrame {
         autoClaimCheckBox.setText("\u81ea\u52a8\u8ba4\u9886\u5956\u52b1");
         contentPane.add(autoClaimCheckBox, "cell 2 2");
 
+        //---- label6 ----
+        label6.setText("\u68c0\u6d4b\u95f4\u9694\uff1a");
+        contentPane.add(label6, "cell 0 3,alignx right,growx 0");
+
+        //---- sleepIntevalSpinner ----
+        sleepIntevalSpinner.setModel(new SpinnerNumberModel(10000, null, null, 1));
+        contentPane.add(sleepIntevalSpinner, "cell 1 3 2 1,alignx left,growx 0");
+
+        //---- label7 ----
+        label7.setText("\u5355\u4f4d\uff1a\u6beb\u79d2\uff0c1000\u6beb\u79d2=1\u79d2\uff0c\u8bbe\u7f6e0\u53ef\u80fd\u4f1a\u5360\u7528\u8f83\u9ad8CPU");
+        contentPane.add(label7, "cell 1 3 2 1");
+
         //---- targetChiaAddressLabel ----
         targetChiaAddressLabel.setText("\u8f6c\u5230\u76ee\u6807\u94b1\u5305\u5730\u5740\uff1a");
-        contentPane.add(targetChiaAddressLabel, "cell 0 3,alignx right,growx 0");
-        contentPane.add(chiaWalletAddressTextField, "cell 1 3 2 1,growx");
+        contentPane.add(targetChiaAddressLabel, "cell 0 4,alignx right,growx 0");
+        contentPane.add(chiaWalletAddressTextField, "cell 1 4 2 1,growx");
 
         //---- feeLabel ----
         feeLabel.setText("\u8f6c\u8d26\u624b\u7eed\u8d39\uff1a");
-        contentPane.add(feeLabel, "cell 0 4,alignx right,growx 0");
+        contentPane.add(feeLabel, "cell 0 5,alignx right,growx 0");
 
         //---- feeTextField ----
         feeTextField.setToolTipText("\u5355\u4f4d\u662fmojo\uff0c\u7ed9\u4e9b\u624b\u7eed\u8d39\u53ef\u4ee5\u52a0\u5feb\u786e\u8ba4\u901f\u5ea6\uff0c\u4f8b\u5982\u586b\uff1a1\u8868\u793a0.000000000001xch\u3002");
-        contentPane.add(feeTextField, "cell 1 4,grow");
+        contentPane.add(feeTextField, "cell 1 5,grow");
 
         //---- label2 ----
         label2.setText("\u5355\u4f4d\uff1amojo");
         label2.setToolTipText("\u6ce8\u610f\u5355\u4f4d\u662fmojo");
-        contentPane.add(label2, "cell 2 4");
+        contentPane.add(label2, "cell 2 5");
 
         //---- button1 ----
         button1.setText("\u5f00\u542f\u81ea\u52a8\u8f6c\u8d26");
         button1.addActionListener(e -> button1(e));
-        contentPane.add(button1, "cell 0 5 3 1,alignx center,growx 0");
-        contentPane.add(separator1, "cell 0 6 3 1");
+        contentPane.add(button1, "cell 0 6 3 1,alignx center,growx 0");
+        contentPane.add(separator1, "cell 0 7 3 1");
 
         //======== scrollPane1 ========
         {
             scrollPane1.setViewportView(logTextArea);
         }
-        contentPane.add(scrollPane1, "cell 0 7 3 1,grow");
+        contentPane.add(scrollPane1, "cell 0 8 3 1,grow");
 
         //---- label4 ----
         label4.setText("\u672c\u5de5\u5177\u53ea\u9002\u7528Windows\u7cfb\u7edf\uff0c\u5df2\u5f00\u6e90\u3001\u6709\u5e7f\u544a\u3002");
-        contentPane.add(label4, "cell 0 8 3 1");
+        contentPane.add(label4, "cell 0 9 3 1");
 
         //---- label5 ----
         label5.setText("\u6e90\u7801\uff1a");
-        contentPane.add(label5, "cell 0 9 3 1,alignx left,growx 0");
+        contentPane.add(label5, "cell 0 10 3 1,alignx left,growx 0");
 
         //---- sourceUrlLabel ----
         sourceUrlLabel.setText("https://github.com/liyifeng/chiaHelper");
@@ -361,11 +377,11 @@ public class AutoTransferDialog extends JFrame {
                 sourceUrlLabelMouseExited(e);
             }
         });
-        contentPane.add(sourceUrlLabel, "cell 0 9 3 1");
+        contentPane.add(sourceUrlLabel, "cell 0 10 3 1");
 
         //---- label1 ----
         label1.setText("\u5b98\u7f51\uff1a");
-        contentPane.add(label1, "cell 0 10 2 1,alignx left,growx 0");
+        contentPane.add(label1, "cell 0 11 2 1,alignx left,growx 0");
 
         //---- websiteLabel ----
         websiteLabel.setText("http://www.easyfarmer.org");
@@ -384,7 +400,7 @@ public class AutoTransferDialog extends JFrame {
                 label6MouseExited(e);
             }
         });
-        contentPane.add(websiteLabel, "cell 0 10 2 1");
+        contentPane.add(websiteLabel, "cell 0 11 2 1");
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -397,6 +413,9 @@ public class AutoTransferDialog extends JFrame {
     private JLabel fingerPrintLabel;
     private JLabel fingerprintValue;
     private JCheckBox autoClaimCheckBox;
+    private JLabel label6;
+    private JSpinner sleepIntevalSpinner;
+    private JLabel label7;
     private JLabel targetChiaAddressLabel;
     private JTextField chiaWalletAddressTextField;
     private JLabel feeLabel;

@@ -26,6 +26,7 @@ public class CheckWallet2Transfer implements Runnable {
     private static Long transferFee; //转账手续费
     private static String fingerprint;
     private static boolean autoClaim = false;
+    private static long sleepInterval = 10000L;
 
     public static void stopMonitor() {
         targetWalletAddress = null;
@@ -35,7 +36,7 @@ public class CheckWallet2Transfer implements Runnable {
         autoClaim = false;
     }
 
-    public static void startMonitor(String walletAddress, String fingerprint, Long fee, boolean autoClaim) {
+    public static void startMonitor(String walletAddress, String fingerprint, Long fee, boolean autoClaim, Integer sleepInterval) {
         CheckWallet2Transfer.monitor = true;
         CheckWallet2Transfer.targetWalletAddress = walletAddress;
         if (fee == null) {
@@ -45,6 +46,7 @@ public class CheckWallet2Transfer implements Runnable {
         }
         CheckWallet2Transfer.fingerprint = fingerprint;
         CheckWallet2Transfer.autoClaim = autoClaim;
+        CheckWallet2Transfer.sleepInterval = Long.valueOf(sleepInterval);
     }
 
     @Override
@@ -88,14 +90,13 @@ public class CheckWallet2Transfer implements Runnable {
             } catch (Exception e) {
                 logger.error("定时检测任务出错", e);
             } finally {
-                try {
-                    long sleepMills = 10000L;
-                    if (Constant.test) {
-                        sleepMills = 5000L;
+                if (sleepInterval > 0) {
+                    try {
+                        Thread.sleep(sleepInterval);
+                    } catch (InterruptedException e) {
+                        logger.warn("监控进程被打断");
+                        break;
                     }
-                    Thread.sleep(sleepMills);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
         }
