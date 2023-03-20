@@ -270,8 +270,8 @@ public class AutoTransferDialog extends JFrame {
             "hidemode 3",
             // columns
             "[fill]" +
-            "[200:250:500,fill]" +
-            "[250:250:500,fill]",
+            "[200:250:250,fill]" +
+            "[250:250:500,grow,fill]",
             // rows
             "[]" +
             "[]" +

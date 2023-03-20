@@ -105,7 +105,7 @@ public class CheckWallet2Transfer implements Runnable {
     // 检查待认领待奖励
     private void checkClaim(String fingerprint) {
         try {
-            //System.out.println("检查是否有待认领的奖励");
+            logger.info("检查是否有待认领的奖励");
             List<NftWallet> nftWalletList = ChiaUtils.plotNftShow(fingerprint);
             if (nftWalletList != null && nftWalletList.size() > 0) {
                 for (NftWallet nftWallet : nftWalletList) {
@@ -125,9 +125,7 @@ public class CheckWallet2Transfer implements Runnable {
 
     private void checkWalletBalance(JSONObject balanceDataJson, String fingerprint) {
         try {
-            if (Constant.test) {
-                logger.info("当前钱包余额情况：{}", balanceDataJson);
-            }
+            logger.info("当前钱包余额：{}", balanceDataJson);
             Long balance = balanceDataJson.getLong("spendable_balance");
 
             if (balance > 0) {//需要转账
@@ -152,7 +150,7 @@ public class CheckWallet2Transfer implements Runnable {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("检查钱包余额出错", e);
         }
 
     }
